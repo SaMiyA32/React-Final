@@ -1,0 +1,23 @@
+# Dependency directories
+**/node_modules/
+
+# Environment variables
+# (uncomment if you want to keep .env private on GitHub, but for ease of setup you can leave them)
+# **/.env
+
+# Zip archives in root
+*.zip
+
+# Production build directories
+**/dist/
+**/build/
+**/out/
+
+# IDE files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
