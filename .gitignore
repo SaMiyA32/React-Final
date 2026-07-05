@@ -3,7 +3,7 @@
 
 # Environment variables
 # (uncomment if you want to keep .env private on GitHub, but for ease of setup you can leave them)
-# **/.env
+**/.env
 
 # Zip archives in root
 *.zip

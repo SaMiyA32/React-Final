@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { Order, IOrder } from '../models/order.model';
 import { orderService } from '../services/order.service';
+import User from '../models/user.model';
+import { emailService } from '../services/email.service';
 
 
 export const createOrder = async (req: Request, res: Response): Promise<void> => {
@@ -193,6 +195,22 @@ export const updateOrderStatus = async (req: Request, res: Response): Promise<vo
         if (!updatedOrder) {
             res.status(404).json({ success: false, message: 'Order not found' });
             return;
+        }
+
+        if (updatedOrder.status === 'delivered') {
+            User.findOne({ _id: updatedOrder.userId }).then(async (userDoc) => {
+                if (userDoc && userDoc.email) {
+                    await emailService.sendOrderDeliveredEmail(userDoc.email, userDoc.name, updatedOrder);
+                }
+            }).catch(err => console.error('Error sending delivery email:', err));
+        }
+
+        if (updatedOrder.status === 'shipped') {
+            User.findOne({ _id: updatedOrder.userId }).then(async (userDoc) => {
+                if (userDoc && userDoc.email) {
+                    await emailService.sendOrderShippedEmail(userDoc.email, userDoc.name, updatedOrder);
+                }
+            }).catch(err => console.error('Error sending shipped email:', err));
         }
 
         res.status(200).json({

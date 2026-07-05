@@ -212,6 +212,219 @@ class EmailService {
       return false;
     }
   }
+
+  async sendOrderDeliveredEmail(email: string, name: string, order: any): Promise<boolean> {
+    try {
+      const mailOptions = {
+        from: env.SMTP_FROM,
+        to: email,
+        subject: `🚚 Order Delivered - Order #${order._id}`,
+        html: `
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="background: linear-gradient(135deg, #4caf50, #2e7d32); padding: 25px 15px; text-align: center; width: 100%; box-sizing: border-box;">
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600; line-height: 1.3;">
+                <span style="font-size: 28px; display: block; margin-bottom: 5px;">🚚</span>
+                NS-<span style="color: #ffeb3b;">Computers</span>
+              </h1>
+              <p style="color: rgba(255, 255, 255, 0.9); margin: 8px 0 0; font-size: 14px; line-height: 1.4;">Your Order Has Been Delivered!</p>
+            </div>
+            
+            <div style="padding: 25px 20px; background: #ffffff; box-sizing: border-box; width: 100%;">
+              <h2 style="color: #333333; margin: 0 0 15px 0; font-size: 20px; line-height: 1.4;">Good news, ${name}!</h2>
+              <p style="color: #555555; font-size: 15px; line-height: 1.6; margin: 0 0 20px 0;">
+                Your order has been successfully delivered. We hope you love your new purchase! Here is a summary of the delivered order:
+              </p>
+              
+              <div style="background: #f1f8e9; border: 1px solid #dcedc8; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-sizing: border-box; width: 100%;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #333;">
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Order ID:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #2e7d32;">#${order._id}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Delivery Date:</strong></td>
+                    <td style="padding: 6px 0; text-align: right;">${new Date().toLocaleString()}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Delivered Item:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold;">${order.itemName}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Total Amount:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #2e7d32;">LKR ${order.totalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="background: #fff8f8; border-left: 4px solid #4caf50; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 25px; box-sizing: border-box; width: 100%;">
+                <p style="margin: 0; font-size: 14px; color: #333; line-height: 1.5;">
+                  💡 <strong>Enjoying your new tech?</strong> We would love to hear your feedback! Share your shopping experience with us.
+                </p>
+              </div>
+
+              <p style="color: #777777; font-size: 13px; line-height: 1.6; margin: 0;">
+                If you did not receive this package or have any questions, please contact our support team immediately at 
+                <a href="mailto:support@nscomputers.com" style="color: #2e7d32; text-decoration: none;">support@nscomputers.com</a>.
+              </p>
+            </div>
+            
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #777777; border-top: 1px solid #eeeeee; box-sizing: border-box; width: 100%;">
+              <p style="margin: 0 0 5px 0;">© ${new Date().getFullYear()} NS-Computers. All rights reserved.</p>
+              <p style="margin: 0;">Thank you for choosing NS Computers!</p>
+            </div>
+          </div>
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending order delivery email:', error);
+      return false;
+    }
+  }
+
+  async sendOrderShippedEmail(email: string, name: string, order: any): Promise<boolean> {
+    try {
+      const mailOptions = {
+        from: env.SMTP_FROM,
+        to: email,
+        subject: `✈️ Your Order Has Been Shipped - Order #${order._id}`,
+        html: `
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="background: linear-gradient(135deg, #2196f3, #1976d2); padding: 25px 15px; text-align: center; width: 100%; box-sizing: border-box;">
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600; line-height: 1.3;">
+                <span style="font-size: 28px; display: block; margin-bottom: 5px;">✈️</span>
+                NS-<span style="color: #ffeb3b;">Computers</span>
+              </h1>
+              <p style="color: rgba(255, 255, 255, 0.9); margin: 8px 0 0; font-size: 14px; line-height: 1.4;">On Its Way!</p>
+            </div>
+            
+            <div style="padding: 25px 20px; background: #ffffff; box-sizing: border-box; width: 100%;">
+              <h2 style="color: #333333; margin: 0 0 15px 0; font-size: 20px; line-height: 1.4;">Great news, ${name}!</h2>
+              <p style="color: #555555; font-size: 15px; line-height: 1.6; margin: 0 0 20px 0;">
+                Your order has been shipped and is on its way to your delivery address. Here is a summary of the shipped items:
+              </p>
+              
+              <div style="background: #e3f2fd; border: 1px solid #bbdefb; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-sizing: border-box; width: 100%;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #333;">
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Order ID:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #1976d2;">#${order._id}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Shipped Date:</strong></td>
+                    <td style="padding: 6px 0; text-align: right;">${new Date().toLocaleString()}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Shipped Item:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold;">${order.itemName}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Total Value:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #1976d2;">LKR ${order.totalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="background: #fff8f8; border-left: 4px solid #2196f3; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 25px; box-sizing: border-box; width: 100%;">
+                <p style="margin: 0; font-size: 14px; color: #333; line-height: 1.5;">
+                  📦 <strong>Tracking Tip:</strong> You will receive another notification once the package arrives at your destination.
+                </p>
+              </div>
+
+              <p style="color: #777777; font-size: 13px; line-height: 1.6; margin: 0;">
+                If you have any questions, please contact our support team at 
+                <a href="mailto:support@nscomputers.com" style="color: #1976d2; text-decoration: none;">support@nscomputers.com</a>.
+              </p>
+            </div>
+            
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #777777; border-top: 1px solid #eeeeee; box-sizing: border-box; width: 100%;">
+              <p style="margin: 0 0 5px 0;">© ${new Date().getFullYear()} NS-Computers. All rights reserved.</p>
+              <p style="margin: 0;">Thank you for choosing NS Computers!</p>
+            </div>
+          </div>
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending order shipping email:', error);
+      return false;
+    }
+  }
+
+  async sendContactFormEmail(shopEmail: string, contactData: any): Promise<boolean> {
+    try {
+      const mailOptions = {
+        from: env.SMTP_FROM,
+        to: shopEmail,
+        replyTo: contactData.email,
+        subject: `📩 New Contact Message: ${contactData.subject}`,
+        html: `
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="background: linear-gradient(135deg, #ff4d4d, #ff1a1a); padding: 25px 15px; text-align: center; width: 100%; box-sizing: border-box;">
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600; line-height: 1.3;">
+                <span style="font-size: 28px; display: block; margin-bottom: 5px;">📩</span>
+                NS-<span style="color: #ffeb3b;">Computers</span>
+              </h1>
+              <p style="color: rgba(255, 255, 255, 0.9); margin: 8px 0 0; font-size: 14px; line-height: 1.4;">New Contact Message Received</p>
+            </div>
+            
+            <div style="padding: 25px 20px; background: #ffffff; box-sizing: border-box; width: 100%;">
+              <h2 style="color: #333333; margin: 0 0 15px 0; font-size: 18px; line-height: 1.4; border-bottom: 2px solid #ff1a1a; padding-bottom: 6px;">Sender Details</h2>
+              <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #333; margin-bottom: 25px;">
+                <tr>
+                  <td style="padding: 6px 0; color: #666; width: 120px;"><strong>Name:</strong></td>
+                  <td style="padding: 6px 0;">${contactData.name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; color: #666;"><strong>Email:</strong></td>
+                  <td style="padding: 6px 0;"><a href="mailto:${contactData.email}" style="color: #ff1a1a; text-decoration: none;">${contactData.email}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; color: #666;"><strong>Phone:</strong></td>
+                  <td style="padding: 6px 0;">${contactData.phone || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; color: #666;"><strong>Category:</strong></td>
+                  <td style="padding: 6px 0;"><span style="background: #fff0f0; color: #ff1a1a; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; text-transform: uppercase;">${contactData.category}</span></td>
+                </tr>
+              </table>
+
+              <h2 style="color: #333333; margin: 0 0 15px 0; font-size: 18px; line-height: 1.4; border-bottom: 2px solid #ff1a1a; padding-bottom: 6px;">Message Content</h2>
+              <div style="background: #f9f9f9; border-radius: 6px; padding: 15px; border: 1px solid #eee; margin-bottom: 20px; box-sizing: border-box; width: 100%;">
+                <p style="margin: 0 0 8px 0; color: #555; font-size: 13px; text-transform: uppercase; font-weight: bold;">Subject: ${contactData.subject}</p>
+                <p style="margin: 0; color: #333; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${contactData.message}</p>
+              </div>
+
+              <div style="text-align: center; margin: 25px 0; width: 100%;">
+                <a href="mailto:${contactData.email}" 
+                   style="display: inline-block; background: #ff1a1a; color: white; 
+                          padding: 12px 25px; text-decoration: none; border-radius: 4px; 
+                          font-weight: 600; font-size: 15px; text-transform: uppercase;
+                          box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 90%; max-width: 250px;
+                          box-sizing: border-box; margin: 0 auto;">
+                  ✉️ Reply to Sender
+                </a>
+              </div>
+            </div>
+            
+            <div style="background: #f5f5f5; padding: 15px; text-align: center; font-size: 11px; color: #777777; border-top: 1px solid #eeeeee; box-sizing: border-box; width: 100%;">
+              <p style="margin: 0;">This email was automatically generated from the NS Computers contact form submission.</p>
+            </div>
+          </div>
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending contact form email:', error);
+      return false;
+    }
+  }
 }
 
 export const emailService = new EmailService();

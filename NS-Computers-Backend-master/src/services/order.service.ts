@@ -138,7 +138,7 @@ class OrderService {
     async getOrdersByUserId(userId: number): Promise<IOrder[]> {
         try {
             
-            return await Order.find({ userId: userId }).sort({ id: 1 });
+            return await Order.find({ userId: userId }).sort({ _id: -1 });
         } catch (error) {
             throw new Error('Error fetching user orders');
         }
@@ -148,7 +148,7 @@ class OrderService {
     async getAllOrders(): Promise<IOrder[]> {
         try {
             
-            return await Order.find({}).sort({ id: 1 });
+            return await Order.find({}).sort({ _id: -1 });
         } catch (error) {
             throw new Error('Error fetching all orders');
         }

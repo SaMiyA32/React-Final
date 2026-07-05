@@ -71,14 +71,7 @@ function App() {
                     <Route path="/signup" element={<SignupPage />} />
 
                     {}
-                    <Route path="/" element={
-                        <DefaultLayout onCartClick={() => {
-                            const cartButton = document.querySelector('.fixed.bottom-8.right-8 button');
-                            if (cartButton) {
-                                cartButton.dispatchEvent(new Event('click', { bubbles: true }));
-                            }
-                        }} />
-                    }>
+                    <Route path="/" element={<DefaultLayout />}>
                         <Route path="/home" element={
                             <ProtectedRoute>
                                 <HomePage />

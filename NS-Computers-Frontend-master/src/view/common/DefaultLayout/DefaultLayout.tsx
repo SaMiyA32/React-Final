@@ -1,19 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from "../Navbar/Navbar.tsx";
 import Footer from "../Footer/Footer.tsx";
-import { CartButton } from '@/components/cart/CartButton';
 
 interface DefaultLayoutProps {
-    children: React.ReactNode;
-    onCartClick?: () => void;
+    children?: React.ReactNode;
 }
 
-export function DefaultLayout({ children, onCartClick }: DefaultLayoutProps) {
+export function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <div className="flex flex-col min-h-screen">
-            <Navbar>
-                <CartButton onClick={onCartClick} />
-            </Navbar>
+            <Navbar />
             <main className="flex-grow">
                 {children || <Outlet />}
             </main>

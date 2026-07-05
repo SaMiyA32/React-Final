@@ -142,21 +142,21 @@ export default function ContactPage() {
             role: "Professional Gamer",
             message: "Excellent service and top-quality gaming laptops. The team really knows their stuff!",
             rating: 5,
-            image: "/placeholder.svg?height=60&width=60",
+            image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80",
         },
         {
             name: "Sachini Fernando",
             role: "Graphic Designer",
             message: "Found the perfect workstation laptop here. Great prices and amazing customer support.",
             rating: 5,
-            image: "/placeholder.svg?height=60&width=60",
+            image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
         },
         {
             name: "Kasun Silva",
             role: "Software Developer",
             message: "Fast delivery and professional setup service. Highly recommend nS-Computers!",
             rating: 5,
-            image: "/placeholder.svg?height=60&width=60",
+            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
         },
     ]
 
@@ -666,16 +666,9 @@ export default function ContactPage() {
                                 style={{ animationDelay: `${index * 0.2}s` }}
                             >
                                 <CardContent className="p-6">
-                                    <div className="flex items-center space-x-4 mb-4">
-                                        <img
-                                            src={testimonial.image || "/placeholder.svg"}
-                                            alt={testimonial.name}
-                                            className="w-12 h-12 rounded-full object-cover"
-                                        />
-                                        <div>
-                                            <h4 className="font-semibold text-white">{testimonial.name}</h4>
-                                            <p className="text-red-400 text-sm">{testimonial.role}</p>
-                                        </div>
+                                    <div className="mb-4">
+                                        <h4 className="font-semibold text-white">{testimonial.name}</h4>
+                                        <p className="text-red-400 text-sm">{testimonial.role}</p>
                                     </div>
                                     <div className="flex mb-3">
                                         {[...Array(testimonial.rating)].map((_, i) => (

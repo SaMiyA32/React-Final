@@ -888,9 +888,9 @@ export default function AdminOrdersPage() {
                                     <Label htmlFor="edit-customer" className="text-slate-300 font-medium">
                                         Customer
                                     </Label>
-                                    <Input
+                                                                    <Input
                                         id="edit-customer"
-                                        value={selectedOrder.customerName}
+                                        value={selectedOrder.username || selectedOrder.customerName || ""}
                                         disabled
                                         className="bg-slate-700/50 border-slate-600 mt-2 text-white"
                                     />
@@ -926,9 +926,9 @@ export default function AdminOrdersPage() {
                                     </Label>
                                     <Textarea
                                         id="edit-items"
-                                        value={Array.isArray(selectedOrder.items) 
+                                        value={selectedOrder.itemName || (Array.isArray(selectedOrder.items) 
                                             ? selectedOrder.items.map(item => `${item.name} x${item.quantity}`).join('\n')
-                                            : selectedOrder.items}
+                                            : selectedOrder.items || "")}
                                         disabled
                                         className="bg-slate-700/50 border-slate-600 mt-2 text-white min-h-[100px]"
                                     />
@@ -939,7 +939,7 @@ export default function AdminOrdersPage() {
                                     </Label>
                                     <Input
                                         id="edit-total"
-                                        value={selectedOrder.totalAmount}
+                                        value={selectedOrder.totalPrice || selectedOrder.totalAmount || 0}
                                         disabled
                                         className="bg-slate-700/50 border-slate-600 mt-2 text-white"
                                     />

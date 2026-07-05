@@ -1,6 +1,7 @@
 
 import { Request, Response } from 'express';
 import { contactService } from '../services'; 
+import { emailService } from '../services/email.service';
 
 interface ContactResponse {
     success: boolean;
@@ -33,6 +34,9 @@ export const submitContactForm = async (req: Request, res: Response): Promise<vo
         };
 
         const savedMessage = await contactService.createContactMessage(contactData);
+
+        emailService.sendContactFormEmail('samiyakolla40@gmail.com', contactData)
+            .catch(err => console.error('Error sending contact form email:', err));
 
         res.status(201).json({
             success: true,
