@@ -1,6 +1,6 @@
-// src/controller/contact.controller.ts
+
 import { Request, Response } from 'express';
-import { contactService } from '../services'; // Make sure this path is correct and contactService is exported
+import { contactService } from '../services'; 
 
 interface ContactResponse {
     success: boolean;
@@ -9,14 +9,12 @@ interface ContactResponse {
     error?: string;
 }
 
-/**
- * Submit a new contact message
- */
+
 export const submitContactForm = async (req: Request, res: Response): Promise<void> => {
     try {
         const { name, email, phone, subject, message, category } = req.body;
 
-        // Basic validation (more detailed validation is in the service/model)
+        
         if (!name || !email || !subject || !message || !category) {
             res.status(400).json({
                 success: false,
@@ -28,7 +26,7 @@ export const submitContactForm = async (req: Request, res: Response): Promise<vo
         const contactData = {
             name,
             email,
-            phone: phone || '', // Phone is optional
+            phone: phone || '', 
             subject,
             message,
             category
@@ -43,7 +41,7 @@ export const submitContactForm = async (req: Request, res: Response): Promise<vo
         });
     } catch (error: any) {
         console.error('Error submitting contact form:', error);
-        res.status(400).json({ // Use 400 for client-side errors like validation
+        res.status(400).json({ 
             success: false,
             message: 'Failed to send your message.',
             error: error.message
@@ -51,9 +49,7 @@ export const submitContactForm = async (req: Request, res: Response): Promise<vo
     }
 };
 
-/**
- * Get all contact messages (Admin only, requires authentication/authorization)
- */
+
 export const getAllContactMessages = async (req: Request, res: Response): Promise<void> => {
     try {
         const messages = await contactService.getAllContactMessages();
@@ -72,9 +68,7 @@ export const getAllContactMessages = async (req: Request, res: Response): Promis
     }
 };
 
-/**
- * Get a single contact message by ID (Admin only)
- */
+
 export const getContactMessage = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -103,9 +97,7 @@ export const getContactMessage = async (req: Request, res: Response): Promise<vo
     }
 };
 
-/**
- * Mark a contact message as read (Admin only)
- */
+
 export const markMessageAsRead = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -134,9 +126,7 @@ export const markMessageAsRead = async (req: Request, res: Response): Promise<vo
     }
 };
 
-/**
- * Delete a contact message (Admin only)
- */
+
 export const deleteContactMessage = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;

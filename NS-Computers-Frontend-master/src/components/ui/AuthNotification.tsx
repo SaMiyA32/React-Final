@@ -14,10 +14,10 @@ export function AuthNotification({ onClose, visible }: AuthNotificationProps) {
   const [progress, setProgress] = useState(100);
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, size: number, delay: number}>>([]);
   
-  // Sync local visibility with prop and handle animations
+  
   useEffect(() => {
     if (visible && !isVisible) {
-      // When becoming visible, generate new particles and show
+      
       const newParticles = Array.from({ length: 15 }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
@@ -27,14 +27,14 @@ export function AuthNotification({ onClose, visible }: AuthNotificationProps) {
       }));
       setParticles(newParticles);
       
-      // Set visible after a small delay to allow for animation
+      
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 10);
       
       return () => clearTimeout(timer);
     } else if (!visible && isVisible) {
-      // When hiding, let the animation complete before updating state
+      
       const timer = setTimeout(() => {
         setIsVisible(false);
       }, 300);
@@ -43,18 +43,18 @@ export function AuthNotification({ onClose, visible }: AuthNotificationProps) {
     }
   }, [visible, isVisible]);
 
-  // Handle progress bar and auto-close
+  
   useEffect(() => {
     if (!visible) return;
     
     setProgress(100);
     
-    // Progress bar animation
+    
     const interval = setInterval(() => {
       setProgress(prev => Math.max(0, prev - 1));
     }, 50);
     
-    // Auto-close after 5 seconds
+    
     const timer = setTimeout(() => {
       handleClose();
     }, 5000);
@@ -67,7 +67,7 @@ export function AuthNotification({ onClose, visible }: AuthNotificationProps) {
 
   const handleClose = () => {
     setIsVisible(false);
-    setTimeout(() => onClose(), 300); // Wait for exit animation
+    setTimeout(() => onClose(), 300); 
   };
 
   if (!visible && !isVisible) return null;
@@ -88,14 +88,14 @@ export function AuthNotification({ onClose, visible }: AuthNotificationProps) {
             }}
             className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 shadow-2xl border border-gray-700"
           >
-            {/* Glow effect */}
+            {}
             <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-blue-500/10" />
             
-            {/* Decorative elements */}
+            {}
             <div className="absolute -top-20 -right-20 w-40 h-40 bg-red-500/5 rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl" />
             
-            {/* Floating particles */}
+            {}
             {particles.map((particle) => (
               <motion.div
                 key={particle.id}
@@ -121,7 +121,7 @@ export function AuthNotification({ onClose, visible }: AuthNotificationProps) {
               />
             ))}
 
-            {/* Close button */}
+            {}
             <motion.button
               onClick={handleClose}
               whileHover={{ scale: 1.1 }}
@@ -133,7 +133,7 @@ export function AuthNotification({ onClose, visible }: AuthNotificationProps) {
 
             <div className="relative z-10 p-5">
               <div className="flex items-start space-x-3">
-                {/* Animated checkmark */}
+                {}
                 <motion.div 
                   className="flex-shrink-0"
                   initial={{ scale: 0, rotate: -90 }}

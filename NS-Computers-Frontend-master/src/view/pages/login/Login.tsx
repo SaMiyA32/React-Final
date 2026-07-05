@@ -68,7 +68,7 @@ export default function LoginPage() {
       };
 
       await login(credentials);
-      // Navigation is now handled by AuthContext after successful login
+      
     } catch (error: any) {
       let errorMessage = "An unexpected error occurred. Please try again.";
 

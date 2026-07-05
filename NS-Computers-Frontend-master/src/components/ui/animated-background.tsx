@@ -5,7 +5,7 @@ import React from 'react';
 export const AnimatedBackground = () => {
     return (
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            {/* Floating particles with red variants */}
+            {}
             {[...Array(25)].map((_, i) => (
                 <div
                     key={i}
@@ -27,7 +27,7 @@ export const AnimatedBackground = () => {
                 />
             ))}
 
-            {/* Gradient orbs */}
+            {}
             <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-gradient-to-r from-red-500/15 to-pink-500/15 rounded-full blur-3xl animate-pulse" />
             <div
                 className="absolute bottom-1/4 right-1/4 w-[200px] h-[200px] bg-gradient-to-r from-cyan-500/10 to-red-500/12 rounded-full blur-3xl animate-pulse"

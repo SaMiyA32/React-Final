@@ -8,13 +8,13 @@ export function CartButton({ onClick }: { onClick: () => void }) {
   const [isMounted, setIsMounted] = useState(false);
   const [showBadge, setShowBadge] = useState(false);
 
-  // Set mounted state to prevent hydration issues
+  
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, []);
 
-  // Only show badge after component is mounted and we have items
+  
   useEffect(() => {
     if (isMounted && itemCount > 0) {
       setShowBadge(true);
@@ -23,7 +23,7 @@ export function CartButton({ onClick }: { onClick: () => void }) {
     }
   }, [itemCount, isMounted]);
 
-  // Don't render anything on the server or if not mounted yet
+  
   if (!isMounted) {
     return (
       <button 

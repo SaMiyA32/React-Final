@@ -9,13 +9,11 @@ interface UserResponse {
     error?: string;
 }
 
-/**
- * Get all users
- */
+
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const users = await userService.getAllUsers();
-        // Ensure each user has an 'id' field (frontend expects 'id', not '_id')
+        
         const usersWithId = users.map((user: any) => ({
             ...user.toObject ? user.toObject() : user,
             id: user._id,
@@ -36,9 +34,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-/**
- * Get user by ID
- */
+
 export const getUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.params.id;
@@ -69,14 +65,12 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-/**
- * Create a new user
- */
+
 export const saveUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { name, email, password, phone, address, role } = req.body;
 
-        // Basic validation
+        
         if (!name || !email || !password) {
             res.status(400).json({
                 success: false,
@@ -85,7 +79,7 @@ export const saveUser = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Prepare user data
+        
         const userData = {
             name,
             email,
@@ -97,7 +91,7 @@ export const saveUser = async (req: Request, res: Response): Promise<void> => {
 
         const user = await userService.createUser(userData);
 
-        // Remove sensitive data before sending response
+        
         const { password: _, refreshToken, ...userWithoutSensitiveData } = user.toObject();
 
         res.status(201).json({
@@ -115,9 +109,7 @@ export const saveUser = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-/**
- * Update an existing user
- */
+
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -132,7 +124,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         const { name, email, password, phone, address, role } = req.body;
         const updateData: Partial<IUser> = {};
 
-        // Only include fields that are provided in the request
+        
         if (name) updateData.name = name;
         if (email) updateData.email = email;
         if (password) updateData.password = password;
@@ -165,9 +157,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
 };
 
-/**
- * Delete a user
- */
+
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -203,9 +193,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     }
 };
 
-/**
- * Search users by name or email
- */
+
 export const searchUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { q } = req.query;
@@ -219,7 +207,7 @@ export const searchUser = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        // Use the searchUsers method from the user service
+        
         const users = await userService.searchUsers(q);
 
         const response: UserResponse = {

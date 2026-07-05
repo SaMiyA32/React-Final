@@ -1,20 +1,20 @@
-// src/models/contact.model.ts
+
 import mongoose, { Document, Schema } from 'mongoose';
 
-// Define the interface for a Contact Message
+
 export interface IContact extends Document {
     name: string;
     email: string;
-    phone?: string; // Optional field
+    phone?: string; 
     subject: string;
     message: string;
-    category: 'Sales' | 'Technical Support' | 'Warranty Claims' | 'Custom Builds' | 'General Inquiry'; // Matching categories from your UI
+    category: 'Sales' | 'Technical Support' | 'Warranty Claims' | 'Custom Builds' | 'General Inquiry'; 
     createdAt: Date;
     updatedAt: Date;
-    isRead: boolean; // To track if an admin has read the message
+    isRead: boolean; 
 }
 
-// Define the Mongoose Schema for Contact
+
 const ContactSchema: Schema = new Schema({
     name: {
         type: String,
@@ -27,7 +27,7 @@ const ContactSchema: Schema = new Schema({
         required: [true, 'Email is required'],
         trim: true,
         lowercase: true,
-        // FIX: Updated email validation regex for better compatibility and robustness
+        
         match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please enter a valid email address']
     },
     phone: {
@@ -35,7 +35,7 @@ const ContactSchema: Schema = new Schema({
         trim: true,
         minlength: [7, 'Phone number must be at least 7 characters long'],
         maxlength: [15, 'Phone number cannot exceed 15 characters'],
-        required: false // Phone is optional in your UI
+        required: false 
     },
     subject: {
         type: String,
@@ -60,9 +60,9 @@ const ContactSchema: Schema = new Schema({
         default: false
     }
 }, {
-    timestamps: true // Adds createdAt and updatedAt fields automatically
+    timestamps: true 
 });
 
-// Create and export the Mongoose Model
+
 const Contact = mongoose.model<IContact>('Contact', ContactSchema);
 export default Contact;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { FaCheckCircle } from 'react-icons/fa';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
@@ -11,24 +11,51 @@ export default function OrderSuccess() {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
 
-  // Store the total before clearing the cart
   const totalBeforeClear = useRef(totalPrice);
+  const itemsBeforeClear = useRef<any[]>([...cartItems]);
 
-  // Example details (these can be replaced with real order info)
   const orderId = Math.floor(Math.random() * 900000 + 100000);
   const orderDate = new Date().toLocaleString();
   const paymentMethod = 'Cash on Delivery';
-  const address = user?.address || '123 Main Street, Colombo, Sri Lanka';
-  const shipping = 0;
+  const address = (user as any)?.address || '123 Main Street, Colombo, Sri Lanka';
+  const shipping: number = 0;
 
-  // Clear cart on mount
   useEffect(() => {
     dispatch(clearCart());
   }, [dispatch]);
 
+  const downloadReceipt = () => {
+    const receiptContent = `=========================================
+               NS COMPUTERS
+        Your Ultimate Tech Partner
+=========================================
+Receipt for Order #${orderId}
+Date: ${orderDate}
+Payment Method: ${paymentMethod}
+Shipping Address: ${address}
+
+Items:
+-----------------------------------------
+${itemsBeforeClear.current.map(item => `${item.name} x ${item.quantity} - LKR ${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+
+-----------------------------------------
+Subtotal: LKR ${totalBeforeClear.current.toFixed(2)}
+Shipping: Free
+Total Amount: LKR ${totalBeforeClear.current.toFixed(2)}
+=========================================
+Thank you for your purchase!
+`;
+    const element = document.createElement("a");
+    const file = new Blob([receiptContent], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+    element.download = `Receipt_${orderId}.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4 relative overflow-hidden">
-      {/* Animated Red Orbs Background */}
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 0.13, scale: 1.1, x: [0, 40, -40, 0], y: [0, -30, 30, 0] }}
@@ -78,7 +105,7 @@ export default function OrderSuccess() {
         >
           Thank you for shopping with us. Your order has been received and is being processed.
         </motion.p>
-        {/* More details section */}
+        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -104,23 +131,23 @@ export default function OrderSuccess() {
             <span className="font-semibold text-base">{address}</span>
           </div>
           <ul className="mb-4 divide-y divide-gray-700">
-            {cartItems.map((item) => (
+            {itemsBeforeClear.current.map((item) => (
               <li
                 key={item.id}
                 className="py-3 flex justify-between items-center text-lg text-gray-200"
               >
                 <span className="font-medium text-gray-100">{item.name} <span className="text-gray-400">x {item.quantity}</span></span>
-                <span className="font-semibold text-red-400">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="font-semibold text-red-400">LKR {(item.price * item.quantity).toFixed(2)}</span>
               </li>
             ))}
           </ul>
           <div className="flex justify-between items-center font-bold text-xl mb-2 px-2">
             <span className="text-gray-300">Subtotal:</span>
-            <span className="text-red-400">${totalBeforeClear.current.toFixed(2)}</span>
+            <span className="text-red-400">LKR {totalBeforeClear.current.toFixed(2)}</span>
           </div>
           <div className="flex justify-between items-center font-semibold text-lg px-2">
             <span className="text-gray-400">Shipping:</span>
-            <span className="text-gray-200">{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+            <span className="text-gray-200">{shipping === 0 ? 'Free' : `LKR ${shipping.toFixed(2)}`}</span>
           </div>
         </motion.div>
         <motion.div
@@ -131,15 +158,27 @@ export default function OrderSuccess() {
         >
           <span role="img" aria-label="party">🎉</span>
         </motion.div>
-        <motion.a
-          href="/"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0, type: 'spring' }}
-          className="mt-8 inline-block bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white py-3 px-8 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105"
-        >
-          Continue Shopping
-        </motion.a>
+        
+        <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full justify-center items-center">
+          <motion.button
+            onClick={downloadReceipt}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0, type: 'spring' }}
+            className="bg-gray-800 hover:bg-gray-755 text-white py-3 px-8 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105 border border-gray-700 cursor-pointer w-full sm:w-auto text-center"
+          >
+            Download Receipt
+          </motion.button>
+          <motion.a
+            href="/"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, type: 'spring' }}
+            className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white py-3 px-8 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 transform hover:scale-105 text-center w-full sm:w-auto"
+          >
+            Continue Shopping
+          </motion.a>
+        </div>
       </motion.div>
     </div>
   );

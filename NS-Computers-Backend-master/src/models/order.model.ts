@@ -2,7 +2,7 @@ import { Document, Schema, model, Model, Types } from 'mongoose';
 import { IUser } from './user.model';
 import { Counter, ICounter } from './counter.model';
 
-// 1. Define interfaces
+
 export interface IOrder extends Document {
     _id: number;
     userId: number;
@@ -16,7 +16,7 @@ export interface IOrder extends Document {
     updatedAt: Date;
 }
 
-// 3. Define order schema
+
 const orderSchema = new Schema<IOrder>(
     {
         _id: { type: Number },
@@ -58,7 +58,7 @@ const orderSchema = new Schema<IOrder>(
     }
 );
 
-// 4. Add pre-save hook for auto-incrementing ID
+
 orderSchema.pre<IOrder>('save', async function(next) {
     if (this.isNew) {
         try {
@@ -77,7 +77,7 @@ orderSchema.pre<IOrder>('save', async function(next) {
     }
 });
 
-// 5. Create and export the model
+
 const Order = model<IOrder>('Order', orderSchema);
 
 export { Order };

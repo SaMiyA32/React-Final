@@ -26,6 +26,7 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   };
 
   const handleCheckout = () => {
+    loading: true;
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -39,7 +40,6 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   return (
     <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-gray-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out translate-x-0 border-l border-gray-700">
       <div className="flex flex-col h-full">
-        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-800">
           <div className="flex items-center space-x-2">
             <ShoppingCart className="h-5 w-5 text-red-400" />
@@ -59,7 +59,6 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           </button>
         </div>
 
-        {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-4 bg-gray-900">
           {cartItems.length === 0 ? (
             <div className="text-center py-12">
@@ -86,9 +85,8 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium text-white truncate">{item.name}</h3>
-                      <p className="text-sm text-red-400">${item.price.toFixed(2)}</p>
+                      <p className="text-sm text-red-400">LKR {item.price.toFixed(2)}</p>
                       
-                      {/* Quantity Controls */}
                       <div className="flex items-center mt-2">
                         <button 
                           onClick={(e) => {
@@ -118,11 +116,10 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                       </div>
                       
                       <p className="mt-1 text-sm font-medium text-white">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        LKR {(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
                     
-                    {/* Remove Button */}
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
@@ -141,12 +138,11 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
           )}
         </div>
 
-        {/* Footer */}
         {cartItems.length > 0 && (
           <div className="p-4 border-t border-gray-800 bg-gray-800">
             <div className="flex justify-between text-lg font-semibold mb-4">
               <span className="text-gray-300">Total:</span>
-              <span className="text-white">${totalPrice.toFixed(2)}</span>
+              <span className="text-white">LKR {totalPrice.toFixed(2)}</span>
             </div>
             <Button
               onClick={handleCheckout}

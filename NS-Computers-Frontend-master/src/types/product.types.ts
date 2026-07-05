@@ -1,4 +1,4 @@
-// Product type definition
+
 export interface IProduct {
   _id: string;
   name: string;
@@ -11,7 +11,7 @@ export interface IProduct {
   updatedAt: string | Date;
 }
 
-// Product form data type (excludes MongoDB specific fields)
+
 export interface IProductFormData {
   name: string;
   description: string;
@@ -21,7 +21,7 @@ export interface IProductFormData {
   imageUrl?: string;
 }
 
-// Default product values
+
 export const defaultProduct: IProduct = {
   _id: '',
   name: '',
@@ -34,7 +34,7 @@ export const defaultProduct: IProduct = {
   updatedAt: new Date()
 };
 
-// Default form values
+
 export const defaultProductFormData: IProductFormData = {
   name: '',
   description: '',

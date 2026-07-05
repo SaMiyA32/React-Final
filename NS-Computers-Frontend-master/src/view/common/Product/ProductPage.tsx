@@ -1,4 +1,4 @@
-// src/view/common/Product/ProductPage.tsx
+
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
@@ -12,7 +12,7 @@ import type { Product } from '@/types/product';
 import type { RootState } from '@/store';
 import { ShoppingCart } from 'lucide-react';
 
-// Memoized selector to prevent unnecessary re-renders
+
 const selectProductsState = (state: RootState) => state.product;
 
 const selectProductsData = createSelector(
@@ -31,7 +31,7 @@ export interface ProductsPageProps {
 export const ProductsPage: React.FC<ProductsPageProps> = () => {
   const dispatch = useDispatch();
   const [isCartOpen, setIsCartOpen] = useState(false);
-  // Using the memoized selector
+  
   const { products, status, error } = useAppSelector(selectProductsData);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = () => {
   }, [dispatch, status]);
 
   const handleAddToCart = (product: Product) => {
-    // Add product to cart
+    
     const cartItem = {
       id: product._id || product.id,
       name: product.name || product.title || 'Unnamed Product',
@@ -63,7 +63,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = () => {
       <ParticleBackground />
       <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-blue-900/20 z-0"></div>
       
-      {/* Cart Toggle Button */}
+      {}
       <button 
         onClick={toggleCart}
         className="fixed right-4 top-24 z-40 p-3 bg-red-600 rounded-full shadow-lg hover:bg-red-700 transition-colors"
@@ -72,7 +72,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = () => {
         <ShoppingCart className="h-6 w-6" />
       </button>
       
-      {/* Cart Sidebar */}
+      {}
       <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
       <div className="relative z-10 container mx-auto px-4 py-8">
@@ -102,7 +102,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = () => {
               Retry
             </button>
             <div className="mt-2 text-sm text-red-400">
-              API Endpoint: http://localhost:3000/api/products
+              API Endpoint: http:
             </div>
           </div>
         )}

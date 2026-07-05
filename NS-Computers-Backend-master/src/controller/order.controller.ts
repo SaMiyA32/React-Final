@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Order, IOrder } from '../models/order.model';
 import { orderService } from '../services/order.service';
 
-// Create a new order
+
 export const createOrder = async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId, itemName, itemPrice, username, quantity } = req.body;
@@ -12,7 +12,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
             return;
         }
 
-        // Convert userId to number
+        
         const userIdNum = Number(userId);
         if (isNaN(userIdNum)) {
             res.status(400).json({ message: 'User ID must be a valid number' });
@@ -37,7 +37,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
             return;
         }
 
-        const orderStatus = req.body.status || 'pending'; // Default to 'pending' if not provided
+        const orderStatus = req.body.status || 'pending'; 
         const orderQuantity = quantity === undefined ? 1 : Number(quantity);
         if (isNaN(orderQuantity) || orderQuantity <= 0) {
             res.status(400).json({ message: 'Quantity must be a positive number' });
@@ -76,7 +76,7 @@ export const createOrder = async (req: Request, res: Response): Promise<void> =>
     }
 };
 
-// Get all orders
+
 export const getAllOrders = async (req: Request, res: Response): Promise<void> => {
     try {
         const orders = await orderService.getAllOrders();
@@ -95,7 +95,7 @@ export const getAllOrders = async (req: Request, res: Response): Promise<void> =
     }
 };
 
-// Get order by ID
+
 export const getOrderById = async (req: Request, res: Response): Promise<void> => {
     try {
         const orderId = req.params.id;
@@ -125,7 +125,7 @@ export const getOrderById = async (req: Request, res: Response): Promise<void> =
     }
 };
 
-// Get orders by user ID
+
 export const getOrdersByUserId = async (req: Request, res: Response): Promise<void> => {
     try {
         const { userId } = req.params;
@@ -135,7 +135,7 @@ export const getOrdersByUserId = async (req: Request, res: Response): Promise<vo
             return;
         }
 
-        // Convert userId to number
+        
         const userIdNum = Number(userId);
         if (isNaN(userIdNum)) {
             res.status(400).json({ success: false, message: 'User ID must be a valid number' });
@@ -158,7 +158,7 @@ export const getOrdersByUserId = async (req: Request, res: Response): Promise<vo
     }
 };
 
-// Update order (all fields)
+
 export const updateOrderStatus = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -167,7 +167,7 @@ export const updateOrderStatus = async (req: Request, res: Response): Promise<vo
             return;
         }
 
-        // Accept all updatable fields from the frontend
+        
         const updateFields: Partial<IOrder> = {};
         const allowedFields = [
             'userId', 'username', 'itemName', 'itemPrice',
@@ -179,7 +179,7 @@ export const updateOrderStatus = async (req: Request, res: Response): Promise<vo
             }
         }
 
-        // If status is provided, sync itemStatus with it
+        
         if (updateFields.status) {
             updateFields.itemStatus = updateFields.status;
         }
@@ -210,7 +210,7 @@ export const updateOrderStatus = async (req: Request, res: Response): Promise<vo
     }
 };
 
-// Delete order
+
 export const deleteOrder = async (req: Request, res: Response): Promise<void> => {
     try {
         const orderId = req.params.id;
@@ -220,7 +220,7 @@ export const deleteOrder = async (req: Request, res: Response): Promise<void> =>
             return;
         }
 
-        // Check if order exists and delete it
+        
         const deletedOrder = await Order.findByIdAndDelete(orderId);
 
         if (!deletedOrder) {

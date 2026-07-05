@@ -38,7 +38,7 @@ const cartSlice = createSlice({
       state.totalQuantity += 1;
       state.totalAmount += action.payload.price;
       
-      // Save to localStorage
+      
       localStorage.setItem('cart', JSON.stringify(state));
     },
     
@@ -52,15 +52,15 @@ const cartSlice = createSlice({
         state.totalQuantity += quantityDiff;
         state.totalAmount += quantityDiff * existingItem.price;
         
-        // Save to localStorage
+        
         localStorage.setItem('cart', JSON.stringify(state));
       } else if (existingItem && quantity <= 0) {
-        // If quantity is 0 or negative, remove the item
+        
         state.items = state.items.filter(item => item.id !== id);
         state.totalQuantity -= existingItem.quantity;
         state.totalAmount -= existingItem.quantity * existingItem.price;
         
-        // Save to localStorage
+        
         localStorage.setItem('cart', JSON.stringify(state));
       }
     },
@@ -77,7 +77,7 @@ const cartSlice = createSlice({
         state.totalQuantity -= 1;
         state.totalAmount -= existingItem.price;
         
-        // Save to localStorage
+        
         localStorage.setItem('cart', JSON.stringify(state));
       }
     },
@@ -90,7 +90,7 @@ const cartSlice = createSlice({
         state.totalQuantity -= existingItem.quantity;
         state.totalAmount -= existingItem.price * existingItem.quantity;
         
-        // Save to localStorage
+        
         localStorage.setItem('cart', JSON.stringify(state));
       }
     },
@@ -100,7 +100,7 @@ const cartSlice = createSlice({
       state.totalQuantity = 0;
       state.totalAmount = 0;
       
-      // Save to localStorage
+      
       localStorage.setItem('cart', JSON.stringify(state));
     },
     
@@ -119,9 +119,9 @@ const cartSlice = createSlice({
 export const { addToCart, updateQuantity, removeFromCart, removeItem, clearCart, loadCart } = cartSlice.actions;
 export default cartSlice.reducer;
 
-// Selectors
+
 export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
 export const selectTotalQuantity = (state: { cart: CartState }) => state.cart.totalQuantity;
 export const selectTotalAmount = (state: { cart: CartState }) => state.cart.totalAmount;
-// Alias for selectTotalAmount for consistency in naming
+
 export const selectTotalPrice = selectTotalAmount;

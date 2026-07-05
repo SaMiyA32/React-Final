@@ -145,32 +145,7 @@ export default function AboutPage() {
         },
     ]
 
-    const team = [
-        {
-            name: "Nuwan Silva",
-            role: "Founder & CEO",
-            image: "/placeholder.svg?height=300&width=300",
-            description: "Gaming enthusiast with 10+ years in tech industry",
-        },
-        {
-            name: "Samantha Perera",
-            role: "Technical Director",
-            image: "/placeholder.svg?height=300&width=300",
-            description: "Expert in hardware optimization and performance tuning",
-        },
-        {
-            name: "Kasun Fernando",
-            role: "Customer Success Manager",
-            image: "/placeholder.svg?height=300&width=300",
-            description: "Dedicated to ensuring exceptional customer experiences",
-        },
-        {
-            name: "Priya Jayawardena",
-            role: "Marketing Director",
-            image: "/placeholder.svg?height=300&width=300",
-            description: "Creative strategist driving brand growth and engagement",
-        },
-    ]
+
 
     const achievements = [
         "Best Gaming Retailer 2023 - Sri Lanka Tech Awards",
@@ -188,7 +163,7 @@ export default function AboutPage() {
 
     return (
         <div className="min-h-screen w-screen bg-black text-white pt-32">
-            {/* Hero Section */}
+            {}
             <section className="relative py-20 overflow-hidden">
                 <ParticleBackground />
 
@@ -312,7 +287,7 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Values Section */}
+            {}
             <section className="py-20 bg-gray-900">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
@@ -348,7 +323,7 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Timeline Section */}
+            {}
             <section className="py-20 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black"></div>
 
@@ -361,7 +336,7 @@ export default function AboutPage() {
                     </div>
 
                     <div className="relative">
-                        {/* Timeline Line */}
+                        {}
                         <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-red-500 via-red-600 to-red-500"></div>
 
                         <div className="space-y-16">
@@ -387,7 +362,7 @@ export default function AboutPage() {
                                         </Card>
                                     </div>
 
-                                    {/* Timeline Node */}
+                                    {}
                                     <div className="relative z-10">
                                         <div
                                             className={`w-6 h-6 rounded-full border-4 border-red-500 transition-all duration-300 ${activeTimeline === index ? "bg-red-500 scale-125" : "bg-black"}`}
@@ -402,45 +377,9 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Team Section */}
-            <section className="py-20 bg-gray-900">
-                <div className="container mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-                            Meet Our <span className="text-red-500">Team</span>
-                        </h2>
-                        <p className="text-lg text-gray-300">The passionate individuals driving our success</p>
-                    </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {team.map((member, index) => (
-                            <Card
-                                key={index}
-                                className="group bg-gray-800/50 border-gray-700 hover:border-red-500/50 transition-all duration-500 transform hover:-translate-y-2 overflow-hidden"
-                                style={{ animationDelay: `${index * 0.1}s` }}
-                            >
-                                <div className="relative overflow-hidden">
-                                    <img
-                                        src={member.image || "/placeholder.svg"}
-                                        alt={member.name}
-                                        className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                </div>
-                                <CardContent className="p-6 text-center">
-                                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-red-400 transition-colors">
-                                        {member.name}
-                                    </h3>
-                                    <p className="text-red-500 font-medium mb-3">{member.role}</p>
-                                    <p className="text-gray-300 text-sm">{member.description}</p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
-            {/* Achievements Section */}
+            {}
             <section className="py-20 relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-red-900/10 via-transparent to-blue-900/10"></div>
 
@@ -469,7 +408,7 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* CTA Section */}
+            {}
             <section className="py-20 bg-gradient-to-r from-red-900/20 via-black to-blue-900/20">
                 <div className="container mx-auto px-4 text-center">
                     <div className="max-w-3xl mx-auto space-y-8">

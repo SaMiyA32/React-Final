@@ -25,32 +25,32 @@ export function Cart({ isOpen, onClose }: CartProps) {
   const items = useAppSelector(selectCartItems);
   const totalQuantity = useAppSelector(selectCartTotalQuantity);
   const totalAmount = useAppSelector(selectCartTotalAmount);
-  const itemCount = totalQuantity; // Use the value we already have from useAppSelector
+  const itemCount = totalQuantity; 
   const [isMounted, setIsMounted] = useState(false);
 
-  // Debug: Log cart state whenever it changes
+  
   useEffect(() => {
     console.log('Cart state updated:', { items, totalQuantity, totalAmount });
   }, [items, totalQuantity, totalAmount]);
 
-  // Debug: Log initial cart state from localStorage
+  
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     console.log('Initial cart from localStorage:', savedCart ? JSON.parse(savedCart) : 'No cart data');
   }, []);
 
-  // Debug logs
+  
   useEffect(() => {
     console.log('Cart mounted/updated. Items:', items, 'Total:', totalAmount, 'Count:', itemCount);
   }, [items, totalAmount, itemCount]);
 
-  // Set mounted state to prevent hydration issues
+  
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
   }, []);
 
-  // Don't render anything on the server or if not mounted yet
+  
   if (!isMounted) {
     return null;
   }
@@ -68,7 +68,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
   };
 
   const handleCheckout = () => {
-    // Simulate order saving (replace with API call if needed)
+    
     setTimeout(() => {
       dispatch(clearCart());
       onClose();
@@ -76,13 +76,13 @@ export function Cart({ isOpen, onClose }: CartProps) {
     }, 500);
   };
 
-  // Debug function to clear cart
+  
   const handleClearCart = () => {
     dispatch(clearCart());
     console.log('Cart cleared');
   };
 
-  // Debug function to add a test product
+  
   const handleAddTestProduct = () => {
     const testProduct = {
       id: 'test-' + Date.now(),

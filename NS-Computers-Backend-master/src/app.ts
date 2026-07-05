@@ -12,22 +12,22 @@ import orderRoutes from './routes/order.routes';
 import { authenticateToken } from './middleware/auth.middleware';
 import contactRoutes from "./routes/contact.routes";
 
-// Load environment variables
+
 config();
 
 const app: Express = express();
 
-// Middleware
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS Configuration - CRUCIAL: Ensure this includes your frontend origin(s)
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'], // Make sure http://localhost:5174 is listed here
+  origin: ['http://localhost:5173', 'http://localhost:5174'], 
   credentials: true
 }));
 
-// Health check endpoint with DB status
+
 app.get('/api/health', (req: Request, res: Response) => {
   const dbStatus = mongoose.connection.readyState;
   let dbStatusText = '';
@@ -52,25 +52,25 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-// API Routes - Ensure these are defined AFTER the CORS middleware
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users',  userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/contact', contactRoutes);
 
-// 404 Handler
+
 app.use(notFound);
 
-// Error Handler
+
 app.use(errorHandler);
 
-// Use port from environment configuration, with a fallback
-const PORT = env.PORT || 3000; // Ensure this matches your backend's actual running port
+
+const PORT = env.PORT || 3000; 
 
 const startServer = async () => {
   try {
-    // Connect to database
+    
     try {
       await connectDB();
     } catch (dbError) {
@@ -78,17 +78,17 @@ const startServer = async () => {
       process.exit(1);
     }
 
-    // Start the server
+    
     const server = app.listen(PORT, () => {
       console.log(`\n🚀 Server running on http://localhost:${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/api/health\n`);
     });
 
-    // Handle server errors
+    
     server.on('error', (error: NodeJS.ErrnoException) => {
       if (error.syscall !== 'listen') throw error;
 
-      // Handle specific listen errors with friendly messages
+      
       switch (error.code) {
         case 'EACCES':
           console.error(`Port ${PORT} requires elevated privileges`);
@@ -103,7 +103,7 @@ const startServer = async () => {
       }
     });
 
-    // Handle process termination
+    
     process.on('SIGINT', () => {
       console.log('\nGracefully shutting down from SIGINT (Ctrl+C)');
       server.close(() => {

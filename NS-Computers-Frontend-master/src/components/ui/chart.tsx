@@ -9,7 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-// Directly import Recharts components
+
 import {
   BarChart,
   Bar,
@@ -26,7 +26,7 @@ import {
   Line,
 } from 'recharts';
 
-// Types
+
 type ChartType = 'bar' | 'line' | 'pie'
 type ChartData = Array<{
   name: string
@@ -44,17 +44,17 @@ type ChartProps = {
   className?: string
 }
 
-// Default colors for charts
+
 const COLORS = [
-  '#0088FE', // blue
-  '#00C49F', // teal
-  '#FFBB28', // yellow
-  '#FF8042', // orange
-  '#8884d8', // purple
-  '#82ca9d',  // green
+  '#0088FE', 
+  '#00C49F', 
+  '#FFBB28', 
+  '#FF8042', 
+  '#8884d8', 
+  '#82ca9d',  
 ]
 
-// Chart component
+
 export function Chart({
   type = 'bar',
   data,
@@ -135,7 +135,7 @@ export function Chart({
     }
   };
 
-  // Add a state to track if the component is mounted
+  
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -172,7 +172,7 @@ export function Chart({
   )
 }
 
-// Chart Icon component
+
 type ChartIconProps = {
   type: ChartType
   className?: string
@@ -189,5 +189,5 @@ export function ChartIcon({ type, className = '', size = 24 }: ChartIconProps) {
   return <Icon className={className} size={size} />
 }
 
-// Export all chart types as named exports
+
 export { BarChart, LineChart, PieChart } from 'recharts'

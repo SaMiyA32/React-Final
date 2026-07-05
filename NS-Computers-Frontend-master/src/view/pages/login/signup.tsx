@@ -17,7 +17,7 @@ interface SignupForm {
     address: string;
     role: 'customer' | 'admin';
     password: string
-    // Removed: confirmPassword: string
+    
     agreeToTerms: boolean
     subscribeNewsletter: boolean
 }
@@ -30,12 +30,12 @@ export default function SignupPage() {
         address: "",
         role: "customer",
         password: "",
-        // Removed: confirmPassword: "",
+        
         agreeToTerms: false,
         subscribeNewsletter: true,
     })
     const [showPassword, setShowPassword] = useState(false)
-    // Removed: const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    
     const [isLoading, setIsLoading] = useState(false)
     const [focusedField, setFocusedField] = useState<string | null>(null)
     const [isVisible, setIsVisible] = useState(false)
@@ -85,12 +85,12 @@ export default function SignupPage() {
             newErrors.password = "Password must be at least 8 characters"
         }
 
-        // Removed: confirmPassword validation
-        // if (!formData.confirmPassword) {
-        //     newErrors.confirmPassword = "Please confirm your password"
-        // } else if (formData.password !== formData.confirmPassword) {
-        //     newErrors.confirmPassword = "Passwords do not match"
-        // }
+        
+        
+        
+        
+        
+        
 
         if (!formData.agreeToTerms) {
             newErrors.agreeToTerms = "You must agree to the terms and conditions"
@@ -184,11 +184,11 @@ export default function SignupPage() {
         <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden">
             <ParticleBackground />
 
-            {/* Gradient Overlays */}
+            {}
             <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 via-black to-blue-900/20 z-0"></div>
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-red-500/5 to-transparent z-0"></div>
 
-            {/* Animated Grid */}
+            {}
             <div className="absolute inset-0 opacity-10 z-0">
                 <div
                     className="w-full h-full"
@@ -210,7 +210,7 @@ export default function SignupPage() {
                     }`}
                 >
                     <CardContent className="p-8">
-                        {/* Header */}
+                        {}
                         <div className="text-center mb-8">
                             <div className="mb-4">
                                 <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-red-200 to-red-500 bg-clip-text text-transparent">
@@ -219,7 +219,7 @@ export default function SignupPage() {
                                 <p className="text-gray-400 mt-2">Create your account to get started</p>
                             </div>
 
-                            {/* Progress Indicator */}
+                            {}
                             <div className="flex items-center justify-center space-x-4 mb-6">
                                 <div
                                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
@@ -251,7 +251,7 @@ export default function SignupPage() {
                             <>
                                 {currentStep === 1 ? (
                                     <>
-                                        {/* Social Login */}
+                                        {}
                                         <div className="mb-6">
                                             <div className="grid grid-cols-3 gap-3">
                                                 {socialLogins.map((social, index) => (
@@ -276,9 +276,9 @@ export default function SignupPage() {
                                             </div>
                                         </div>
 
-                                        {/* Step 1 Form */}
+                                        {}
                                         <div className="space-y-6">
-                                            {/* Full Name Field */}
+                                            {}
                                             <div className="relative">
                                                 <User
                                                     className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
@@ -303,7 +303,7 @@ export default function SignupPage() {
                                                 )}
                                             </div>
 
-                                            {/* Email Field */}
+                                            {}
                                             <div className="relative">
                                                 <Mail
                                                     className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
@@ -324,7 +324,7 @@ export default function SignupPage() {
                                                 {errors.email && <p className="text-red-400 text-sm mt-1 animate-bounce">{errors.email}</p>}
                                             </div>
 
-                                            {/* Phone Field */}
+                                            {}
                                             <div className="relative">
                                                 <Phone
                                                     className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
@@ -345,7 +345,7 @@ export default function SignupPage() {
                                                 {errors.phone && <p className="text-red-400 text-sm mt-1 animate-bounce">{errors.phone}</p>}
                                             </div>
 
-                                            {/* Address Field */}
+                                            {}
                                             <div className="relative">
                                                 <MapPin
                                                     className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
@@ -366,7 +366,7 @@ export default function SignupPage() {
                                                 {errors.address && <p className="text-red-400 text-sm mt-1 animate-bounce">{errors.address}</p>}
                                             </div>
 
-                                            {/* Role Field (Dropdown) */}
+                                            {}
                                             <div className="relative">
                                                 <Briefcase
                                                     className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
@@ -386,7 +386,7 @@ export default function SignupPage() {
                                                         <option value="customer" className="bg-gray-800 text-white">Customer</option>
                                                         <option value="admin" className="bg-gray-800 text-white">Admin</option>
                                                     </select>
-                                                    {/* Custom arrow for select */}
+                                                    {}
                                                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
                                                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                                                     </div>
@@ -394,7 +394,7 @@ export default function SignupPage() {
                                             </div>
 
 
-                                            {/* Next Button */}
+                                            {}
                                             <Button
                                                 onClick={handleNext}
                                                 className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 font-semibold transform hover:scale-105 transition-all duration-300 shadow-lg shadow-red-500/25"
@@ -408,9 +408,9 @@ export default function SignupPage() {
                                     </>
                                 ) : (
                                     <>
-                                        {/* Step 2 Form */}
+                                        {}
                                         <form onSubmit={handleSubmit} className="space-y-6">
-                                            {/* Password Field */}
+                                            {}
                                             <div className="relative">
                                                 <Lock
                                                     className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
@@ -436,7 +436,7 @@ export default function SignupPage() {
                                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                                 </button>
 
-                                                {/* Password Strength Indicator */}
+                                                {}
                                                 {formData.password && (
                                                     <div className="mt-2">
                                                         <div className="flex items-center space-x-2">
@@ -464,41 +464,10 @@ export default function SignupPage() {
                                                 {errors.password && <p className="text-red-400 text-sm mt-1 animate-bounce">{errors.password}</p>}
                                             </div>
 
-                                            {/* Removed Confirm Password Field */}
-                                            {/*
-                                            <div className="relative">
-                                                <Lock
-                                                    className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${
-                                                        focusedField === "confirmPassword" ? "text-red-500" : "text-gray-400"
-                                                    }`}
-                                                />
-                                                <Input
-                                                    type={showConfirmPassword ? "text" : "password"}
-                                                    placeholder="Confirm password"
-                                                    value={formData.confirmPassword}
-                                                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                                                    onFocus={() => setFocusedField("confirmPassword")}
-                                                    onBlur={() => setFocusedField(null)}
-                                                    className={`pl-12 pr-12 bg-gray-800/50 border-gray-600 text-white placeholder-gray-400 transition-all duration-300 ${
-                                                        focusedField === "confirmPassword"
-                                                            ? "border-red-500 shadow-lg shadow-red-500/20 bg-gray-800/80"
-                                                            : ""
-                                                    } ${errors.confirmPassword ? "border-red-500" : ""}`}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors duration-300"
-                                                >
-                                                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                                                </button>
-                                                {errors.confirmPassword && (
-                                                    <p className="text-red-400 text-sm mt-1 animate-bounce">{errors.confirmPassword}</p>
-                                                )}
-                                            </div>
-                                            */}
+                                            {}
+                                            {}
 
-                                            {/* Checkboxes */}
+                                            {}
                                             <div className="space-y-3">
                                                 <label className="flex items-start space-x-3 cursor-pointer group">
                                                     <input
@@ -535,12 +504,12 @@ export default function SignupPage() {
                                                 </label>
                                             </div>
 
-                                            {/* Display general API error */}
+                                            {}
                                             {errors.api && (
                                                 <p className="text-red-400 text-sm text-center animate-bounce">{errors.api}</p>
                                             )}
 
-                                            {/* Action Buttons */}
+                                            {}
                                             <div className="flex space-x-4">
                                                 <Button
                                                     type="button"
@@ -575,7 +544,7 @@ export default function SignupPage() {
                         )}
 
 
-                        {/* Sign In Link */}
+                        {}
                         <div className="text-center mt-6">
                             <p className="text-gray-400">
                                 Already have an account?{" "}
@@ -587,7 +556,7 @@ export default function SignupPage() {
                     </CardContent>
                 </Card>
 
-                {/* Floating Elements */}
+                {}
                 <div className="absolute -top-10 -left-10 w-20 h-20 bg-red-500/20 rounded-full blur-xl animate-pulse"></div>
                 <div
                     className="absolute -bottom-10 -right-10 w-32 h-32 bg-blue-500/20 rounded-full blur-xl animate-pulse"

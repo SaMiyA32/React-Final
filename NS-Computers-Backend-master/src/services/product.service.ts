@@ -2,9 +2,7 @@ import { Product, IProduct } from '../models/product.model';
 import { FilterQuery, UpdateQuery } from 'mongoose';
 
 class ProductService {
-    /**
-     * Get all products with optional filtering
-     */
+    
     async getAllProducts(filter: FilterQuery<IProduct> = {}): Promise<IProduct[]> {
         try {
             return await Product.find(filter).sort({ createdAt: -1 });
@@ -14,12 +12,10 @@ class ProductService {
         }
     }
 
-    /**
-     * Get a single product by ID
-     */
+    
     async getProductById(id: string | number): Promise<IProduct | null> {
         try {
-            // MongoDB uses string IDs, so no conversion is needed unless you're using a different database
+            
             return await Product.findById(id);
         } catch (error) {
             console.error('Error in getProductById:', error);
@@ -27,9 +23,7 @@ class ProductService {
         }
     }
 
-    /**
-     * Create a new product
-     */
+    
     async createProduct(productData: Partial<IProduct>): Promise<IProduct> {
         try {
             const product = new Product(productData);
@@ -40,11 +34,9 @@ class ProductService {
         }
     }
 
-    /**
-     * Update an existing product
-     */
+    
     async updateProduct(
-        id: string, // Changed to string for MongoDB ObjectId
+        id: string, 
         updateData: UpdateQuery<IProduct>
     ): Promise<IProduct | null> {
         try {
@@ -59,9 +51,7 @@ class ProductService {
         }
     }
 
-    /**
-     * Delete a product
-     */
+    
     async deleteProduct(id: string): Promise<boolean> {
         try {
             const result = await Product.findByIdAndDelete(id);
@@ -72,9 +62,7 @@ class ProductService {
         }
     }
 
-    /**
-     * Search products by name or description
-     */
+    
     async searchProducts(query: string): Promise<IProduct[]> {
         try {
             return await Product.find({
@@ -90,5 +78,5 @@ class ProductService {
     }
 }
 
-// Export a singleton instance
+
 export const productService = new ProductService();

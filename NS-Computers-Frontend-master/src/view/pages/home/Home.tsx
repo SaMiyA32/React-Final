@@ -14,16 +14,16 @@ export default function HomePage() {
     const [currentSlide, setCurrentSlide] = useState(0)
     const [isInitialLoad, setIsInitialLoad] = useState(true)
 
-    // Show notification on login
+    
     useEffect(() => {
-        // Skip the initial render
+        
         if (isInitialLoad) {
             console.log('Skipping initial render');
             setIsInitialLoad(false);
             return;
         }
 
-        // Only run this effect after initial auth check is complete
+        
         if (loading) {
             console.log('Auth is still loading...');
             return;
@@ -34,22 +34,22 @@ export default function HomePage() {
         if (isAuthenticated && user) {
             console.log('User is authenticated, showing notification...');
             
-            // Reset the notification flag if this is a new login
+            
             const lastLogin = sessionStorage.getItem('lastLogin');
             const currentTime = new Date().getTime();
             
-            // If it's a new login (no lastLogin or more than 1 minute ago)
+            
             if (!lastLogin || (currentTime - parseInt(lastLogin)) > 60000) {
                 console.log('New login detected, showing notification');
                 setShowNotification(true);
                 
-                // Auto-hide after 5 seconds
+                
                 const timer = setTimeout(() => {
                     console.log('Auto-hiding notification');
                     setShowNotification(false);
                 }, 5000);
                 
-                // Store the current login time
+                
                 sessionStorage.setItem('lastLogin', currentTime.toString());
                 
                 return () => clearTimeout(timer);
@@ -127,17 +127,17 @@ export default function HomePage() {
 
     return (
         <div className="relative min-h-screen bg-black text-white">
-            {/* Auth Notification */}
+            {}
             <AuthNotification 
                 visible={showNotification}
                 onClose={handleNotificationClose}
             />
             
-            {/* Hero Section */}
+            {}
             <section className="relative h-screen w-screen overflow-hidden">
                 <ParticleBackground />
 
-                {/* Background Image with Overlay */}
+                {}
                 <div className={`absolute inset-0 ${heroSlides[currentSlide].background} transition-all duration-1000`}>
                     <div className="absolute inset-0 bg-black/40"></div>
                     <div
@@ -150,7 +150,7 @@ export default function HomePage() {
                     ></div>
                 </div>
 
-                {/* Hero Content */}
+                {}
                 <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
                     <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
                         <div className="space-y-8">
@@ -188,13 +188,13 @@ export default function HomePage() {
                                     className="w-full h-auto drop-shadow-2xl"
                                 />
                             </div>
-                            {/* Glow Effect */}
+                            {}
                             <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-blue-500/20 blur-3xl transform scale-110"></div>
                         </div>
                     </div>
                 </div>
 
-                {/* Slide Navigation */}
+                {}
                 <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
                     {heroSlides.map((_, index) => (
                         <button
@@ -207,7 +207,7 @@ export default function HomePage() {
                     ))}
                 </div>
 
-                {/* Navigation Arrows */}
+                {}
                 <button
                     onClick={() => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-black/50 hover:bg-black/75 text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
@@ -222,7 +222,7 @@ export default function HomePage() {
                 </button>
             </section>
 
-            {/* Features Section */}
+            {}
             <section className="py-16 bg-gray-900">
                 <div className="container mx-auto px-4">
                     <div className="grid md:grid-cols-4 gap-8">
@@ -244,7 +244,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Latest Laptops Section */}
+            {}
             <section className="py-16 bg-gray-50 text-black">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
@@ -303,7 +303,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Footer */}
+            {}
 
         </div>
     )

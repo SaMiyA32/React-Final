@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import ParticleBackground from "../home/particle-background"
+import { useNavigate } from "react-router-dom"
 
 interface Service {
     id: string
@@ -64,6 +65,7 @@ function AnimatedIcon({ icon: Icon, isActive, color }: AnimatedIconProps) {
 }
 
 export default function ServicesPage() {
+    const navigate = useNavigate()
     const [activeCategory, setActiveCategory] = useState("all")
     const [activeService, setActiveService] = useState<string | null>(null)
     const [isVideoPlaying, setIsVideoPlaying] = useState(false)
@@ -292,7 +294,7 @@ export default function ServicesPage() {
 
     return (
         <div className="min-h-screen w-screen bg-black text-white pt-32">
-            {/* Hero Section */}
+            {}
             <section className="relative py-20 overflow-hidden">
                 <ParticleBackground />
 
@@ -318,6 +320,7 @@ export default function ServicesPage() {
                             <Button
                                 size="lg"
                                 className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-300 shadow-lg shadow-red-500/25"
+                                onClick={() => navigate('/contact')}
                             >
                                 Get Quote
                                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -336,7 +339,7 @@ export default function ServicesPage() {
                 </div>
             </section>
 
-            {/* Stats Section */}
+            {}
             <section className="py-16 bg-gray-900/50 backdrop-blur-sm">
                 <div className="container mx-auto px-4">
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -357,7 +360,7 @@ export default function ServicesPage() {
                 </div>
             </section>
 
-            {/* Service Categories */}
+            {}
             <section className="py-20 relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/5 to-transparent"></div>
 
@@ -394,8 +397,8 @@ export default function ServicesPage() {
                 </div>
             </section>
 
-            {/* Services Grid */}
-            <section className="py-20 bg-gray-900">
+            {}
+            <section id="services-list" className="py-20 bg-gray-900">
                 <div className="container mx-auto px-4">
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {filteredServices.map((service, index) => (
@@ -466,6 +469,7 @@ export default function ServicesPage() {
                                         <Button
                                             size="sm"
                                             className="bg-red-600 hover:bg-red-700 text-white transform hover:scale-105 transition-all duration-300"
+                                            onClick={() => navigate('/contact')}
                                         >
                                             Get Quote
                                             <ArrowRight className="ml-2 w-4 h-4" />
@@ -478,7 +482,7 @@ export default function ServicesPage() {
                 </div>
             </section>
 
-            {/* Process Section */}
+            {}
             <section className="py-20 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black"></div>
 
@@ -491,7 +495,7 @@ export default function ServicesPage() {
                     </div>
 
                     <div className="relative">
-                        {/* Process Line */}
+                        {}
                         <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-red-600 to-red-500 transform -translate-y-1/2"></div>
 
                         <div className="grid lg:grid-cols-4 gap-8">
@@ -516,7 +520,7 @@ export default function ServicesPage() {
                 </div>
             </section>
 
-            {/* CTA Section */}
+            {}
             <section className="py-20 bg-gradient-to-r from-red-900/20 via-black to-blue-900/20">
                 <div className="container mx-auto px-4 text-center">
                     <div className="max-w-3xl mx-auto space-y-8">
@@ -530,6 +534,7 @@ export default function ServicesPage() {
                             <Button
                                 size="lg"
                                 className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-300 shadow-lg shadow-red-500/25"
+                                onClick={() => navigate('/contact')}
                             >
                                 Contact Us Now
                                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -538,6 +543,7 @@ export default function ServicesPage() {
                                 variant="outline"
                                 size="lg"
                                 className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-8 py-4 text-lg font-semibold transform hover:scale-105 transition-all duration-300 bg-transparent"
+                                onClick={() => document.getElementById('services-list')?.scrollIntoView({ behavior: 'smooth' })}
                             >
                                 View Pricing
                             </Button>

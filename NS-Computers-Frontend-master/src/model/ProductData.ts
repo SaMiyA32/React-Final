@@ -5,8 +5,9 @@ export interface ProductData {
     originalPrice?: number;
     rating?: number;
     reviewCount?: number;
-    images: string[]; // Array of image URLs
-    image?: string; // For backward compatibility
+    images: string[]; 
+    image?: string; 
+    imageUrl?: string; 
     category?: string;
     isNew?: boolean;
     isOnSale?: boolean;

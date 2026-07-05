@@ -1,18 +1,16 @@
-// src/services/user.service.ts
+
 import User, { IUser, IUserDocument } from '../models/user.model';
 import { FilterQuery, UpdateQuery, Types } from 'mongoose';
 import { emailService } from './email.service';
 
 export class UserService {
-    // Email validation regex
-    private readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // This regex is used for email validation
+    
+    private readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
 
-    // Password validation regex - at least 8 chars, 1 uppercase, 1 lowercase, 1 number
+    
     private readonly passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-    /**
-     * Validate user input
-     */
+    
     private validateUserInput(userData: Partial<IUser> & { password?: string }): { isValid: boolean; errors: string[] } {
         const { name, email, password, phone, address } = userData;
 
@@ -22,7 +20,7 @@ export class UserService {
             errors.push('Name must be at least 2 characters long');
         }
 
-        if (!email || !this.emailRegex.test(email)) { // This line checks the email format
+        if (!email || !this.emailRegex.test(email)) { 
             errors.push('Please enter a valid email address');
         }
 
@@ -45,9 +43,7 @@ export class UserService {
         };
     }
 
-    /**
-     * Create a new user
-     */
+    
     async createUser(userData: {
         name: string;
         email: string;
@@ -92,9 +88,7 @@ export class UserService {
         }
     }
 
-    /**
-     * Get all users (without sensitive data)
-     */
+    
     async getAllUsers(): Promise<Omit<IUser, 'password' | 'refreshToken'>[]> {
         try {
             const users = await User.find({}, { password: 0, refreshToken: 0 });
@@ -104,9 +98,7 @@ export class UserService {
         }
     }
 
-    /**
-     * Find user by ID (without sensitive data)
-     */
+    
     async findUserById(id: string): Promise<Omit<IUser, 'password' | 'refreshToken'> | null> {
         try {
             if (!Types.ObjectId.isValid(id)) {
@@ -119,9 +111,7 @@ export class UserService {
         }
     }
 
-    /**
-     * Find user by email (with password, for login verification)
-     */
+    
     async findUserByEmail(email: string): Promise<IUserDocument | null> {
         try {
             return await User.findOne({ email });
@@ -130,15 +120,13 @@ export class UserService {
         }
     }
 
-    /**
-     * Update user
-     */
+    
     async updateUser(
         id: string,
         updateData: UpdateQuery<IUser>
     ): Promise<Omit<IUser, 'password' | 'refreshToken'> | null> {
         try {
-            // Convert id to number for numeric _id
+            
             const numericId = Number(id);
             if (isNaN(numericId)) {
                 throw new Error('Invalid user ID');
@@ -158,12 +146,10 @@ export class UserService {
         }
     }
 
-    /**
-     * Delete user
-     */
+    
     async deleteUser(id: string): Promise<boolean> {
         try {
-            // Convert id to number for numeric _id
+            
             const numericId = Number(id);
             if (isNaN(numericId)) {
                 throw new Error('Invalid user ID');
@@ -176,9 +162,7 @@ export class UserService {
         }
     }
 
-    /**
-     * Compare password
-     */
+    
     async comparePassword(user: IUser, candidatePassword: string): Promise<boolean> {
         try {
             const userDoc = await User.findById(user._id).select('+password');
@@ -190,9 +174,7 @@ export class UserService {
         }
     }
 
-    /**
-     * Update refresh token
-     */
+    
     async updateRefreshToken(userId: string, refreshToken: string | null): Promise<void> {
         try {
             if (!Types.ObjectId.isValid(userId)) {
@@ -209,9 +191,7 @@ export class UserService {
         }
     }
 
-    /**
-     * Search users by name or email
-     */
+    
     async searchUsers(query: string): Promise<Omit<IUser, 'password' | 'refreshToken'>[]> {
         try {
             if (!query || query.trim().length < 2) {
@@ -234,5 +214,5 @@ export class UserService {
     }
 }
 
-// Export a singleton instance
+
 export const userService = new UserService();

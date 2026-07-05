@@ -1,28 +1,66 @@
-import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/app/hooks';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { selectCartItems, selectTotalPrice } from '@/features/cart/cartSlice';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
+import { createOrder } from '@/slices/orderSlice';
+import { toast } from 'sonner';
 
 export default function OrderSummary() {
   const cartItems = useAppSelector(selectCartItems);
   const totalPrice = useAppSelector(selectTotalPrice);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const { user } = useAuth();
+  const [isConfirming, setIsConfirming] = useState(false);
 
-  // Example extra details (could be dynamic in real app)
   const orderDate = new Date().toLocaleString();
   const orderId = Math.floor(Math.random() * 900000 + 100000);
-  const shipping = 0; // Free shipping
+  const shipping: number = 0;
   const paymentMethod = 'Cash on Delivery';
-  const address = user?.address || '123 Main Street, Colombo, Sri Lanka';
+  const address = (user as any)?.address || '123 Main Street, Colombo, Sri Lanka';
 
-  const handleConfirm = () => {
-    setTimeout(() => {
+  const handleConfirm = async () => {
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty!");
+      return;
+    }
+
+    setIsConfirming(true);
+    try {
+      for (const item of cartItems) {
+        const orderData = {
+          userId: Number((user as any)?._id || (user as any)?.id) || 1,
+          username: (user as any)?.name || (user as any)?.username || 'Guest',
+          items: [{
+            productId: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+          }],
+          totalAmount: item.price * item.quantity,
+          status: 'pending' as const,
+          shippingAddress: address,
+          paymentMethod: paymentMethod,
+          paymentStatus: 'pending' as const
+        };
+        
+        const resultAction = await dispatch(createOrder(orderData));
+        if (createOrder.rejected.match(resultAction)) {
+          throw new Error(String(resultAction.payload || 'Failed to place order'));
+        }
+      }
+      
+      toast.success("Order placed successfully!");
       navigate('/order-success');
-    }, 1000);
+    } catch (err: any) {
+      console.error("Failed to place order:", err);
+      toast.error(err.message || "Failed to place order. Please try again.");
+    } finally {
+      setIsConfirming(false);
+    }
   };
 
   return (
@@ -33,7 +71,6 @@ export default function OrderSummary() {
         transition={{ duration: 0.7, type: 'spring' }}
         className="bg-gray-900 rounded-2xl shadow-2xl max-w-2xl w-full p-10 border border-gray-700 relative overflow-hidden"
       >
-        {/* Animated header */}
         <motion.h2
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -45,9 +82,8 @@ export default function OrderSummary() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
           className="mb-8 text-center text-lg text-gray-300 font-medium"
-        >Customer: <span className="font-semibold text-red-400">{user?.name || user?.username || 'Guest'}</span></motion.p>
+        >Customer: <span className="font-semibold text-red-400">{(user as any)?.name || (user as any)?.username || 'Guest'}</span></motion.p>
 
-        {/* Animated order details */}
         <motion.div
           className="flex flex-wrap justify-center gap-6 mb-8"
           initial="hidden"
@@ -91,7 +127,6 @@ export default function OrderSummary() {
           <span className="font-semibold text-base">{address}</span>
         </motion.div>
 
-        {/* Animated cart items */}
         <motion.ul
           initial="hidden"
           animate="visible"
@@ -103,18 +138,17 @@ export default function OrderSummary() {
           }}
           className="mb-8 divide-y divide-gray-800"
         >
-          {cartItems.map((item, idx) => (
+          {cartItems.map((item: any) => (
             <motion.li
               key={item.id}
               variants={{ hidden: { opacity: 0, x: -40 }, visible: { opacity: 1, x: 0 } }}
               className="py-4 flex justify-between items-center text-lg text-gray-200"
             >
               <span className="font-medium text-gray-100">{item.name} <span className="text-gray-400">x {item.quantity}</span></span>
-              <span className="font-semibold text-red-400">${(item.price * item.quantity).toFixed(2)}</span>
+              <span className="font-semibold text-red-400">LKR {(item.price * item.quantity).toFixed(2)}</span>
             </motion.li>
           ))}
         </motion.ul>
-        {/* Animated subtotal and confirm button */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -122,7 +156,7 @@ export default function OrderSummary() {
           className="flex justify-between items-center font-bold text-2xl mb-6 px-2"
         >
           <span className="text-gray-300">Subtotal:</span>
-          <span className="text-red-400">${totalPrice.toFixed(2)}</span>
+          <span className="text-red-400">LKR {totalPrice.toFixed(2)}</span>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -131,7 +165,7 @@ export default function OrderSummary() {
           className="flex justify-between items-center font-semibold text-lg mb-10 px-2"
         >
           <span className="text-gray-400">Shipping:</span>
-          <span className="text-gray-200">{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
+          <span className="text-gray-200">{shipping === 0 ? 'Free' : `LKR ${shipping.toFixed(2)}`}</span>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
@@ -140,9 +174,10 @@ export default function OrderSummary() {
         >
           <Button
             onClick={handleConfirm}
+            disabled={isConfirming}
             className="w-full bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white py-4 rounded-xl font-bold text-xl shadow-lg transition-all duration-300 transform hover:scale-105"
           >
-            Confirm Order
+            {isConfirming ? 'Processing Order...' : 'Confirm Order'}
           </Button>
         </motion.div>
         <motion.div
@@ -151,7 +186,6 @@ export default function OrderSummary() {
           transition={{ delay: 0.7 }}
           className="absolute -bottom-10 -right-10 w-60 h-60 bg-red-600 rounded-full blur-3xl opacity-20 pointer-events-none"
         />
-        {/* Animated Background Orbs */}
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 0.18, scale: 1.1, x: [0, 40, -40, 0], y: [0, -30, 30, 0] }}

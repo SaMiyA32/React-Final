@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from './store'; // Assuming you have a store.ts file
+import type { RootState } from './store'; 
 
-// Define the UserData interface
+
 interface UserData {
     _id: string | number;
     name: string;
@@ -10,12 +10,12 @@ interface UserData {
     phone: string;
     address: string;
     role: "admin" | "customer";
-    password?: string;  // Added optional password field
+    password?: string;  
     createdAt: string;
     updatedAt: string;
 }
 
-// Define the state for the user slice
+
 interface UserState {
     users: UserData[];
     isLoading: boolean;
@@ -28,9 +28,9 @@ const initialState: UserState = {
     error: null,
 };
 
-// --- Async Thunks for API Calls ---
 
-// Thunk to get all users
+
+
 export const fetchUsers = createAsyncThunk(
     'users/fetchUsers',
     async (_, { rejectWithValue }) => {
@@ -44,7 +44,7 @@ export const fetchUsers = createAsyncThunk(
             }
             const data = await response.json();
             console.log('Fetched users data:', data);
-            return data.data; // Assuming the API response has a 'data' field with the users array
+            return data.data; 
         } catch (error: any) {
             console.error('Error in fetchUsers:', error);
             return rejectWithValue(error.message || 'An error occurred while fetching users');
@@ -52,7 +52,7 @@ export const fetchUsers = createAsyncThunk(
     }
 );
 
-// Thunk to create a new user
+
 export const createUser = createAsyncThunk(
     'users/createUser',
     async (newUserData: Omit<UserData, "_id" | "createdAt" | "updatedAt">, { rejectWithValue }) => {
@@ -77,7 +77,7 @@ export const createUser = createAsyncThunk(
                 return rejectWithValue(errorMsg);
             }
             
-            return responseData.data; // Return the created user data
+            return responseData.data; 
         } catch (error: any) {
             console.error('Error in createUser:', error);
             return rejectWithValue(error.message || 'An unexpected error occurred');
@@ -85,12 +85,12 @@ export const createUser = createAsyncThunk(
     }
 );
 
-// Thunk to update an existing user
+
 export const updateUser = createAsyncThunk(
     'users/updateUser',
     async ({ id, updatedUserData }: { id: string | number; updatedUserData: Partial<UserData> }, { rejectWithValue }) => {
         try {
-            // Ensure ID is a string (some backends are picky about this)
+            
             const stringId = String(id).trim();
             console.log('Updating user with ID:', stringId, 'Type:', typeof stringId, 'Data:', updatedUserData);
             
@@ -112,7 +112,7 @@ export const updateUser = createAsyncThunk(
                 throw new Error(errorMsg);
             }
             
-            return responseData.data; // Return the updated user data
+            return responseData.data; 
         } catch (error: any) {
             console.error('Error in updateUser thunk:', error);
             return rejectWithValue(error.message || 'An error occurred while updating the user');
@@ -120,14 +120,14 @@ export const updateUser = createAsyncThunk(
     }
 );
 
-// Thunk to delete a user
+
 export const deleteUser = createAsyncThunk(
     'users/deleteUser',
     async (id: string | number, { rejectWithValue }) => {
         console.log('=== deleteUser thunk started ===');
         console.log('Deleting user with ID:', id);
         
-        // Validate ID
+        
         if (!id) {
             const errorMsg = 'No user ID provided for deletion';
             console.error(errorMsg);
@@ -136,10 +136,10 @@ export const deleteUser = createAsyncThunk(
         
         let response;
         try {
-            // Ensure ID is a string (some backends are picky about this)
+            
             const stringId = String(id).trim();
             
-            // Add timestamp to prevent caching
+            
             const url = new URL(`http://localhost:3000/api/users/${stringId}`);
             url.searchParams.append('_t', Date.now().toString());
             
@@ -163,7 +163,7 @@ export const deleteUser = createAsyncThunk(
             console.log('Response status:', response.status);
             console.log('Response status text:', response.statusText);
             
-            // Try to read the response as text first to avoid JSON parse errors
+            
             const responseText = await response.text();
             console.log('Raw response text:', responseText);
             
@@ -210,7 +210,7 @@ export const deleteUser = createAsyncThunk(
                 } : 'No response received'
             });
             
-            // Return a more detailed error message
+            
             const errorMessage = error.message || 'Failed to delete user';
             return rejectWithValue({
                 message: errorMessage,
@@ -225,14 +225,14 @@ export const deleteUser = createAsyncThunk(
 );
 
 
-// --- User Slice ---
+
 const userSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            // Handle fetchUsers lifecycle
+            
             .addCase(fetchUsers.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
@@ -245,7 +245,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.error = action.payload as string;
             })
-            // Handle createUser lifecycle
+            
             .addCase(createUser.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
@@ -259,14 +259,14 @@ const userSlice = createSlice({
                 state.error = action.payload as string;
                 console.error('Failed to create user:', action.payload);
             })
-            // Handle updateUser lifecycle
+            
             .addCase(updateUser.fulfilled, (state, action: PayloadAction<UserData>) => {
                 const index = state.users.findIndex(user => user._id === action.payload._id);
                 if (index !== -1) {
                     state.users[index] = action.payload;
                 }
             })
-            // Handle deleteUser lifecycle
+            
             .addCase(deleteUser.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;

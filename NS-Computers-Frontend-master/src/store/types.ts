@@ -1,4 +1,4 @@
-// Define base state interfaces to avoid circular dependencies
+
 export interface BaseEntity {
     _id?: string;
     id?: string;
@@ -29,7 +29,7 @@ export interface User extends BaseEntity {
     status?: 'active' | 'inactive';
 }
 
-// Define state interfaces
+
 export interface ProductState {
     products: Product[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -49,12 +49,12 @@ export interface UserState {
     isLoggedIn: boolean;
 }
 
-// Define the root state
+
 export interface RootState {
     products: ProductState;
     cart: CartState;
     users: UserState;
 }
 
-// This will be properly typed in store.ts
+
 export type AppDispatch = any;

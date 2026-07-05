@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { ProductData } from '../model/ProductData';
 
-// Ensure ProductData has the correct shape
+
 type CartProductData = ProductData & {
   id: string;
   _id?: string;
@@ -11,7 +11,7 @@ type CartProductData = ProductData & {
 
 interface CartItem extends ProductData {
   quantity: number;
-  id: string; // Ensure id is always a string
+  id: string; 
 }
 
 interface UpdateQuantityPayload {
@@ -25,7 +25,7 @@ interface CartState {
   totalAmount: number;
 }
 
-// Load cart from localStorage or use initial state
+
 const loadCartFromLocalStorage = (): CartState => {
   console.log('loadCartFromLocalStorage called');
   
@@ -46,7 +46,7 @@ const loadCartFromLocalStorage = (): CartState => {
       const parsedCart = JSON.parse(savedCart);
       console.log('Parsed cart:', parsedCart);
       
-      // Validate the cart structure
+      
       if (Array.isArray(parsedCart.items) && 
           typeof parsedCart.totalQuantity === 'number' && 
           typeof parsedCart.totalAmount === 'number') {
@@ -71,7 +71,7 @@ const loadCartFromLocalStorage = (): CartState => {
 
 const initialState: CartState = loadCartFromLocalStorage();
 
-// Helper to ensure price is a number
+
 const ensureNumber = (price: number | string): number => {
   if (typeof price === 'number') return price;
   const num = parseFloat(price);
@@ -93,7 +93,7 @@ const cartSlice = createSlice({
           return;
         }
         
-        // Log the incoming item with all its properties
+        
         console.log('New item being added to cart:', {
           id: newItem.id,
           _id: newItem._id,
@@ -106,7 +106,7 @@ const cartSlice = createSlice({
           description: newItem.description
         });
         
-        // Ensure we have a valid ID
+        
         const itemId = newItem.id || newItem._id || '';
         if (!itemId) {
           console.error('Item has no valid ID:', newItem);
@@ -114,14 +114,14 @@ const cartSlice = createSlice({
         }
         console.log('Using itemId:', itemId);
         
-        // Log current state before modification
+        
         console.log('Current cart state before add:', {
           items: state.items,
           totalQuantity: state.totalQuantity,
           totalAmount: state.totalAmount
         });
         
-        // Find existing item by both id and _id
+        
         const existingItem = state.items.find(item => {
           const matches = (
             (item.id && (item.id === itemId || item.id === newItem._id)) || 
@@ -139,7 +139,7 @@ const cartSlice = createSlice({
         
         console.log('Existing item in cart:', existingItem);
         
-        // Handle image - use first from images array, then image, then default
+        
         let itemImage = '/images/network.jpg';
         if (newItem.images && newItem.images.length > 0) {
           itemImage = newItem.images[0];
@@ -149,11 +149,11 @@ const cartSlice = createSlice({
         console.log('Selected item image:', itemImage);
         
         if (existingItem) {
-          // If item already exists in cart, increase quantity
+          
           console.log('Item exists in cart, increasing quantity');
           existingItem.quantity += 1;
         } else {
-          // Create new cart item with all required fields
+          
           const cartItem = {
             ...newItem,
             id: itemId,
@@ -172,15 +172,15 @@ const cartSlice = createSlice({
           state.items.push(cartItem);
         }
         
-        // Update totals
+        
         state.totalQuantity += 1;
         state.totalAmount += ensureNumber(newItem.price);
         
-        // Create cart state for localStorage
+        
         const cartState = {
           items: state.items.map(item => ({
             ...item,
-            // Ensure we don't store functions or other non-serializable data
+            
             price: ensureNumber(item.price),
             quantity: item.quantity || 1
           })),
@@ -190,7 +190,7 @@ const cartSlice = createSlice({
         
         console.log('Saving to localStorage:', cartState);
         
-        // Save to localStorage
+        
         try {
           localStorage.setItem('cart', JSON.stringify(cartState));
           console.log('Successfully saved to localStorage');
@@ -198,14 +198,14 @@ const cartSlice = createSlice({
           console.error('Error saving to localStorage:', error);
         }
         
-        // Log final state
+        
         console.log('Cart state after add:', {
           items: state.items,
           totalQuantity: state.totalQuantity,
           totalAmount: state.totalAmount
         });
         
-        // Verify localStorage
+        
         try {
           const savedCart = localStorage.getItem('cart');
           console.log('Verified localStorage content:', savedCart ? JSON.parse(savedCart) : 'No cart data');
@@ -231,16 +231,16 @@ const cartSlice = createSlice({
         state.totalQuantity += quantityDiff;
         state.totalAmount += price * quantityDiff;
         
-        // Ensure totals don't go negative
+        
         state.totalQuantity = Math.max(0, state.totalQuantity);
         state.totalAmount = Math.max(0, state.totalAmount);
         
-        // Remove item if quantity is zero or negative
+        
         if (quantity <= 0) {
           state.items = state.items.filter(item => item.id !== id && item._id !== id);
         }
         
-        // Persist to localStorage
+        
         localStorage.setItem('cart', JSON.stringify({
           items: state.items,
           totalQuantity: state.totalQuantity,
@@ -262,11 +262,11 @@ const cartSlice = createSlice({
         state.totalQuantity -= 1;
         state.totalAmount -= ensureNumber(existingItem.price);
         
-        // Ensure totals don't go negative
+        
         state.totalQuantity = Math.max(0, state.totalQuantity);
         state.totalAmount = Math.max(0, state.totalAmount);
         
-        // Persist to localStorage
+        
         localStorage.setItem('cart', JSON.stringify({
           items: state.items,
           totalQuantity: state.totalAmount,
@@ -279,13 +279,13 @@ const cartSlice = createSlice({
       state.totalQuantity = 0;
       state.totalAmount = 0;
       
-      // Clear from localStorage
+      
       localStorage.removeItem('cart');
     },
   },
 });
 
-// Selectors
+
 export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
 export const selectCartTotalQuantity = (state: { cart: CartState }) => state.cart.totalQuantity;
 export const selectCartTotalAmount = (state: { cart: CartState }) => state.cart.totalAmount;

@@ -94,16 +94,16 @@ export default function AuthBackground() {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
 
             elementsRef.current.forEach((element) => {
-                // Update position
+                
                 element.x += element.vx
                 element.y += element.vy
                 element.rotation += element.rotationSpeed
 
-                // Bounce off edges
+                
                 if (element.x < 0 || element.x > canvas.width) element.vx *= -1
                 if (element.y < 0 || element.y > canvas.height) element.vy *= -1
 
-                // Keep within bounds
+                
                 element.x = Math.max(0, Math.min(canvas.width, element.x))
                 element.y = Math.max(0, Math.min(canvas.height, element.y))
 

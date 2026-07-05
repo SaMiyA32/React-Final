@@ -1,4 +1,4 @@
-// src/controller/product.controller.ts
+
 import { Request, Response } from 'express';
 import { productService } from '../services/product.service';
 import { IProduct } from '../models/product.model';
@@ -18,7 +18,7 @@ interface ProductDataForFrontend {
     category?: string;
 }
 
-// Get all products
+
 export const getAllProducts = async (req: Request, res: Response) => {
     try {
         const products = await productService.getAllProducts();
@@ -60,7 +60,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     }
 };
 
-// Get single product
+
 export const getProduct = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
@@ -71,7 +71,7 @@ export const getProduct = async (req: Request, res: Response) => {
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        // Transform single product for frontend
+        
         const transformedProduct: ProductDataForFrontend = {
             id: product._id.toString(),
             name: product.name,
@@ -93,12 +93,12 @@ export const getProduct = async (req: Request, res: Response) => {
     }
 };
 
-// Create new product
+
 export const saveProduct = async (req: Request, res: Response) => {
     try {
         const productData = req.body;
         const newProduct = await productService.createProduct(productData);
-        // Transform the created product for a consistent frontend response
+        
         const transformedProduct: ProductDataForFrontend = {
             id: newProduct._id.toString(),
             name: newProduct.name,
@@ -120,7 +120,7 @@ export const saveProduct = async (req: Request, res: Response) => {
     }
 };
 
-// Update an existing product
+
 export const updateProduct = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
@@ -129,7 +129,7 @@ export const updateProduct = async (req: Request, res: Response) => {
         if (!updatedProduct) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        // Transform the updated product for a consistent frontend response
+        
         const transformedProduct: ProductDataForFrontend = {
             id: updatedProduct._id.toString(),
             name: updatedProduct.name,
@@ -151,7 +151,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     }
 };
 
-// Delete product
+
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
@@ -169,7 +169,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
     }
 };
 
-// Search products
+
 export const searchProducts = async (req: Request, res: Response) => {
     try {
         const { q } = req.query;

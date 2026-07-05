@@ -1,4 +1,4 @@
-// src/view/common/Product/ProductCard.tsx
+
 "use client"
 
 import { useState } from "react"
@@ -16,7 +16,7 @@ type ProductCardProps = {
 }
 
 export function ProductCard({ data, onAddToCart }: ProductCardProps) {
-    // Debug log to check the incoming data
+    
     console.log('ProductCard data:', data);
 
     const [isHovered, setIsHovered] = useState(false)
@@ -28,19 +28,19 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
     const cartItem = cartItems.find(item => item.id === (data.id || data._id));
 
     const handleAddToCart = () => {
-        if (data.stock <= 0) return; // Prevent adding out of stock items
+        if (data.stock <= 0) return; 
 
         setIsAddingToCart(true);
         
         try {
-            // Get the product image - use the first image from images array, then fall back to image, then use default
+            
             const productImage = (data.images && data.images.length > 0) 
                 ? data.images[0] 
                 : data.image || '/images/network.jpg';
             
-            // Create a cart item with the correct structure expected by the cart slice
+            
             const cartItem = {
-                id: data.id || data._id, // Ensure we have an id
+                id: data.id || data._id, 
                 name: data.name || data.title || 'Unnamed Product',
                 price: typeof data.price === 'number' ? data.price : Number(data.price) || 0,
                 image: productImage,
@@ -49,8 +49,8 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
             
             console.log('Adding to cart:', cartItem);
             
-            // Only dispatch addToCart if onAddToCart is not provided
-            // If onAddToCart is provided, it will handle the dispatch
+            
+            
             if (onAddToCart) {
                 onAddToCart();
             } else {
@@ -68,15 +68,15 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                              data.title?.toLowerCase().includes('rog strix');
         
         return Array.from({ length: 5 }, (_, i) => {
-            // For special models (TUF F15 or ROG Strix), show 4.5 stars
+            
             if (isSpecialModel && i === 4) {
                 return (
                     <div key={i} className="relative w-4 h-4">
-                        {/* White half */}
+                        {}
                         <div className="absolute left-0 top-0 w-1/2 h-full overflow-hidden">
                             <Star className="w-4 h-4 fill-white text-white" />
                         </div>
-                        {/* Red half */}
+                        {}
                         <div className="absolute right-0 top-0 w-1/2 h-full overflow-hidden">
                             <Star className="w-4 h-4 fill-red-500 text-red-500 -ml-2" />
                         </div>
@@ -84,7 +84,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                 );
             }
             
-            // For all other cases, show full stars
+            
             return (
                 <Star
                     key={i}
@@ -98,24 +98,24 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
         });
     }
 
-    // Log the product data for debugging
+    
     console.log('Product Data:', data);
     
-    // Extract the first line of the description as it likely contains the model name
+    
     const getFirstLine = (text: string) => (text || '').split('\n')[0].trim();
     
-    // Map product names to their corresponding local images
+    
     const getProductImage = () => {
-        // Try to get the model from the first line of the description
+        
         const descriptionFirstLine = getFirstLine(data.description || '').toLowerCase();
         const productTitle = (data.title || '').toLowerCase().trim();
         
         console.log('Product Title:', productTitle);
         console.log('Description First Line:', descriptionFirstLine);
         
-        // Direct mapping of model names to image paths
+        
         const imageMap: {[key: string]: string} = {
-            // ASUS Models
+            
             'tuf f15': '/images/asus tuf2.webp',
             'tuf f15 fx506': '/images/asus tuf2.webp',
             'rog strix': '/images/Asus rog.jpg',
@@ -124,26 +124,26 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
             'asus rog': '/images/Asus rog.jpg',
             'asus tuf': '/images/asus tuf2.webp',
             
-            // MSI Models
+            
             'msi katana': '/images/msi.jpg',
             'msi gf63': '/images/msi.jpg',
             'msi thin': '/images/msi.jpg',
             'msi raider': '/images/msi.jpg',
             
-            // MacBooks
+            
             'macbook air': '/images/macbooks.png',
             'macbook pro': '/images/macbooks.png',
             'macbook': '/images/macbooks.png',
             'm1': '/images/macbooks.png',
             'm2': '/images/macbooks.png',
             
-            // Gaming PCs
+            
             'gaming': '/images/gaming pc.jpg',
             'gaming laptop': '/images/gaming pc.jpg',
             'gaming pc': '/images/gaming pc.jpg',
         };
         
-        // First, try to match with the first line of description
+        
         for (const [key, value] of Object.entries(imageMap)) {
             if (descriptionFirstLine.includes(key)) {
                 console.log(`Matched via description "${key}":`, value);
@@ -151,7 +151,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
             }
         }
         
-        // If no match in description, try with the product title
+        
         for (const [key, value] of Object.entries(imageMap)) {
             if (productTitle.includes(key)) {
                 console.log(`Matched via title "${key}":`, value);
@@ -159,7 +159,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
             }
         }
         
-        // If still no match, check for common keywords in both title and description
+        
         const searchText = `${productTitle} ${descriptionFirstLine}`.toLowerCase();
         
         if (searchText.includes('tuf') || searchText.includes('f15') || searchText.includes('fx506')) {
@@ -186,7 +186,21 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
         return '/images/network.jpg';
     };
     
-    const imageUrl = getProductImage();
+    
+    const getDisplayImage = () => {
+        if (data.imageUrl && data.imageUrl.trim() !== '') {
+            return data.imageUrl;
+        }
+        if (data.image && data.image.trim() !== '') {
+            return data.image;
+        }
+        if (data.images && data.images.length > 0 && data.images[0] && data.images[0].trim() !== '') {
+            return data.images[0];
+        }
+        return getProductImage();
+    };
+
+    const imageUrl = getDisplayImage();
     const isOutOfStock = data.stock <= 0;
     const alreadyInCart = Boolean(cartItem);
 
@@ -197,9 +211,9 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Product Image Container */}
+            {}
             <div className="relative aspect-square bg-white overflow-hidden">
-                {/* Image container */}
+                {}
                 <div className="absolute inset-0 flex items-center justify-center">
                     <img
                         src={imageUrl}
@@ -224,7 +238,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                     </div>
                 </div>
 
-                {/* Badges */}
+                {}
                 <div className="absolute top-2 left-2 flex flex-col space-y-1">
                     {data.isNew && (
                         <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white border-0 shadow-sm">
@@ -243,7 +257,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                     )}
                 </div>
 
-                {/* Wishlist Button */}
+                {}
                 <button
                     className={`absolute top-2 right-2 p-2 rounded-full bg-white/80 backdrop-blur-sm transition-colors ${
                         isLiked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'
@@ -257,7 +271,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                     <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
                 </button>
 
-                {/* Quick Add to Cart Button (shown on hover) */}
+                {}
                 {!isOutOfStock && (
                     <div
                         className={`absolute bottom-0 left-0 right-0 bg-gradient-to-r from-red-600 to-red-500 text-white text-center py-2 transform transition-all duration-300 ${
@@ -281,14 +295,14 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                 )}
             </div>
 
-            {/* Product Info */}
+            {}
             <CardContent className="p-5 flex-grow flex flex-col">
-                {/* Category */}
+                {}
                 {data.category && (
                     <p className="text-xs text-gray-500 mb-1 capitalize">{data.category}</p>
                 )}
 
-                {/* Laptop Name - Direct access to all data properties */}
+                {}
                 <div className="mb-2">
                     <h2 
                         className="font-extrabold text-white text-2xl line-clamp-2 leading-tight"
@@ -302,12 +316,12 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                     </h2>
                 </div>
 
-                {/* Brand (if available) */}
+                {}
                 {data.brand && (
                     <p className="text-sm text-gray-600 mb-2">{data.brand}</p>
                 )}
 
-                {/* Rating */}
+                {}
                 <div className="flex items-center space-x-1 mb-3">
                     <div className="flex">
                         {renderStars()}
@@ -317,7 +331,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                     )}
                 </div>
 
-                {/* Description */}
+                {}
                 {data.description && (
                     <div className="mb-3">
                         <p className="text-sm text-white line-clamp-2" title={data.description}>
@@ -326,7 +340,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                     </div>
                 )}
 
-                {/* Price */}
+                {}
                 <div className="mt-auto">
                     <div className="flex items-baseline space-x-2">
                         <span className="font-bold text-lg text-yellow-400">
@@ -339,7 +353,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                         )}
                     </div>
 
-                    {/* Stock Status */}
+                    {}
                     <div className={`inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium ${
                         isOutOfStock 
                             ? 'bg-red-100 text-red-800' 
@@ -352,7 +366,7 @@ export function ProductCard({ data, onAddToCart }: ProductCardProps) {
                     </div>
                 </div>
 
-                {/* Add to Cart Button (for mobile) */}
+                {}
                 {!isOutOfStock && (
                     <Button
                         variant="default"

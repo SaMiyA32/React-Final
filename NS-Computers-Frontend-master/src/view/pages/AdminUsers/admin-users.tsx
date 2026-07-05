@@ -1,10 +1,10 @@
-"use client"
-
+import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from '@/store'
 import { selectAllUsersData } from '@/slices/selectors/userSelectors'
 import { toast } from 'sonner'
+import { useAuth } from "@/contexts/AuthContext"
 import {
     Search,
     Plus,
@@ -50,10 +50,10 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-// Import Redux actions
+
 import { fetchUsers, createUser, updateUser, deleteUser } from "@/slices/userSlice"
 
-// User type for form state
+
 type UserFormData = {
     _id?: string | number;
     name: string;
@@ -65,11 +65,11 @@ type UserFormData = {
     confirmPassword?: string;
 }
 
-// Enhanced animated background with more red effects (no lines)
+
 const AnimatedBackground = () => {
     return (
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            {/* Floating particles with red variants */}
+            {}
             {[...Array(25)].map((_, i) => (
                 <div
                     key={i}
@@ -85,7 +85,7 @@ const AnimatedBackground = () => {
                 />
             ))}
 
-            {/* Enhanced gradient orbs with red */}
+            {}
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse" />
             <div
                 className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-cyan-500/8 to-red-500/8 rounded-full blur-3xl animate-pulse"
@@ -96,7 +96,7 @@ const AnimatedBackground = () => {
                 style={{ animationDelay: "2s" }}
             />
 
-            {/* Floating red glows */}
+            {}
             {[...Array(6)].map((_, i) => (
                 <div
                     key={`glow-${i}`}
@@ -116,8 +116,26 @@ const AnimatedBackground = () => {
 export default function AdminUsersPage() {
     const dispatch = useDispatch()
     const { users, isLoading, error } = useAppSelector(selectAllUsersData)
+    const { logout } = useAuth()
 
-    // Form state
+    
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        return localStorage.getItem('theme') !== 'light';
+    })
+
+    useEffect(() => {
+        if (!isDarkMode) {
+            localStorage.setItem('theme', 'light');
+            document.body.style.backgroundColor = '#f8fafc';
+            document.body.style.color = '#0f172a';
+        } else {
+            localStorage.setItem('theme', 'dark');
+            document.body.style.backgroundColor = 'black';
+            document.body.style.color = 'white';
+        }
+    }, [isDarkMode]);
+
+    
     const [isAddModalOpen, setIsAddModalOpen] = useState(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -130,12 +148,12 @@ export default function AdminUsersPage() {
         phone: "",
         address: "",
         role: "customer",
-        password: Math.random().toString(36).slice(-8), // Auto-generate a default password
+        password: Math.random().toString(36).slice(-8), 
         confirmPassword: ""
     })
     const [formErrors, setFormErrors] = useState<Partial<UserFormData>>({})
 
-    // Fetch users on component mount and log the users data
+    
     useEffect(() => {
         console.log('AdminUsersPage: Fetching users...');
         dispatch(fetchUsers())
@@ -147,14 +165,14 @@ export default function AdminUsersPage() {
             });
     }, [dispatch])
 
-    // Handle API errors
+    
     useEffect(() => {
         if (error) {
             toast.error(`Error: ${error}`)
         }
     }, [error])
 
-    // Filter users based on search and role
+    
     const filteredUsers = users.filter((user: any) => {
         const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            user.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -162,13 +180,13 @@ export default function AdminUsersPage() {
         return matchesSearch && matchesRole
     })
 
-    // Handle form input changes
+    
     const handleInputChange = (field: keyof UserFormData, value: string) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
         }))
-        // Clear error when user types
+        
         if (formErrors[field as keyof typeof formErrors]) {
             setFormErrors(prev => ({
                 ...prev,
@@ -177,18 +195,18 @@ export default function AdminUsersPage() {
         }
     }
 
-    // Validate form
+    
     const validateForm = (): boolean => {
         console.log('Validating form with data:', formData);
         const errors: Partial<UserFormData> = {}
         
-        // Validate name
+        
         if (!formData.name?.trim()) {
             errors.name = "Name is required"
             console.log('Name validation failed: Name is required')
         }
         
-        // Validate email
+        
         if (!formData.email?.trim()) {
             errors.email = "Email is required"
             console.log('Email validation failed: Email is required')
@@ -197,19 +215,19 @@ export default function AdminUsersPage() {
             console.log('Email validation failed: Invalid email format')
         }
         
-        // Validate phone
+        
         if (!formData.phone?.trim()) {
             errors.phone = "Phone is required"
             console.log('Phone validation failed: Phone is required')
         }
         
-        // Validate address
+        
         if (!formData.address?.trim()) {
             errors.address = "Address is required"
             console.log('Address validation failed: Address is required')
         }
         
-        // Only validate password for new users
+        
         if (!currentUser?._id) {
             if (!formData.password) {
                 errors.password = "Password is required"
@@ -227,7 +245,7 @@ export default function AdminUsersPage() {
         return isValid
     }
 
-    // Reset form
+    
     const resetForm = () => {
         setFormData({
             name: "",
@@ -241,7 +259,7 @@ export default function AdminUsersPage() {
         setCurrentUser(null)
     }
 
-    // Handle form submission
+    
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         console.log('Form submitted with data:', formData)
@@ -252,15 +270,15 @@ export default function AdminUsersPage() {
         }
         
         try {
-            // Create a clean user data object without undefined or empty password for updates
+            
             const userData = { ...formData }
             
-            // For new users, ensure password is provided
+            
             if (!currentUser?._id && !userData.password) {
                 throw new Error("Password is required")
             }
             
-            // Remove password field if it's empty (for updates)
+            
             if (currentUser?._id && !userData.password) {
                 delete userData.password
             }
@@ -268,7 +286,7 @@ export default function AdminUsersPage() {
             console.log('Sending user data to server:', userData)
             
             if (currentUser?._id) {
-                // Update existing user
+                
                 const result = await dispatch(updateUser({ 
                     id: currentUser._id, 
                     updatedUserData: userData 
@@ -277,19 +295,19 @@ export default function AdminUsersPage() {
                 console.log('User update result:', result)
                 toast.success("User updated successfully")
                 
-                // Close modal and reset form
+                
                 setIsEditModalOpen(false)
             } else {
-                // Create new user
+                
                 const result = await dispatch(createUser(userData)).unwrap()
                 console.log('User creation result:', result)
                 toast.success("User created successfully")
                 
-                // Close modal and reset form
+                
                 setIsAddModalOpen(false)
             }
             
-            // Reset form and refresh users list
+            
             resetForm()
             await dispatch(fetchUsers())
             
@@ -301,7 +319,7 @@ export default function AdminUsersPage() {
         }
     }
 
-    // Handle edit user
+    
     const handleEditUser = (user: any) => {
         console.log('Editing user:', user)
         setCurrentUser(user)
@@ -312,12 +330,12 @@ export default function AdminUsersPage() {
             phone: user.phone,
             address: user.address,
             role: user.role,
-            password: "" // Don't pre-fill password for security
+            password: "" 
         })
         setIsEditModalOpen(true)
     }
     
-    // Test function to directly call the delete API
+    
     const testDeleteUser = async (userId: string | number) => {
         try {
             console.log('=== Testing direct delete API call ===');
@@ -354,7 +372,7 @@ export default function AdminUsersPage() {
         }
     };
     
-    // Handle delete button click
+    
     const handleDeleteClick = (userId: string | number) => {
         console.log('Delete button clicked for user ID:', userId);
         console.log('Current users list:', users);
@@ -366,10 +384,10 @@ export default function AdminUsersPage() {
             console.log('Setting current user and opening delete modal');
             setCurrentUser(userToDelete);
             
-            // Test the direct API call
+            
             testDeleteUser(userId).catch(console.error);
             
-            // Open the modal
+            
             setIsDeleteModalOpen(true);
         } else {
             console.error('User not found with ID:', userId);
@@ -377,11 +395,15 @@ export default function AdminUsersPage() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
+            isDarkMode ? "bg-black text-white" : "bg-slate-50 text-slate-900"
+        }`}>
             <AnimatedBackground />
 
-            {/* Sidebar */}
-            <div className="fixed left-0 top-0 h-full w-64 bg-slate-800/90 backdrop-blur-xl border-r border-slate-700/50 z-10">
+            {}
+            <div className={`fixed left-0 top-0 h-full w-64 backdrop-blur-xl border-r transition-all duration-300 z-10 ${
+                isDarkMode ? "bg-slate-800/90 border-slate-700/50 text-white" : "bg-white border-slate-200 text-slate-800"
+            }`}>
                 <div className="p-6">
                     <div className="flex items-center gap-3 mb-8">
                         <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg shadow-red-500/25">
@@ -392,46 +414,63 @@ export default function AdminUsersPage() {
 
                     <nav className="space-y-2">
                         {[
-                            { icon: TrendingUp, label: "Dashboard", active: false },
-                            { icon: Users, label: "Users", active: true },
-                            { icon: ShoppingCart, label: "Orders", active: false },
-                            { icon: Package, label: "Products", active: false },
-                            { icon: DollarSign, label: "Analytics", active: false },
+                            { icon: TrendingUp, label: "Dashboard", href: "/admin-dashboard", active: false },
+                            { icon: Users, label: "Users", href: "/admin-users", active: true },
+                            { icon: ShoppingCart, label: "Orders", href: "/admin-orders", active: false },
+                            { icon: Package, label: "Products", href: "/admin-products", active: false },
+                            { icon: DollarSign, label: "Analytics", href: "/admin-dashboard", active: false },
                         ].map((item) => (
-                            <div
-                                key={item.label}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
-                                    item.active
-                                        ? "bg-red-500/20 border border-red-500/30 text-red-400 shadow-lg shadow-red-500/10"
-                                        : "hover:bg-slate-700/50 text-slate-300 hover:shadow-md"
-                                }`}
-                            >
-                                <item.icon className="w-5 h-5" />
-                                <span className="font-medium">{item.label}</span>
-                            </div>
+                            <Link to={item.href} key={item.label} className="block">
+                                <div
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
+                                        item.active
+                                            ? "bg-red-500/20 border border-red-500/30 text-red-400 shadow-lg shadow-red-500/10"
+                                            : isDarkMode
+                                                ? "hover:bg-slate-700/50 text-slate-300 hover:shadow-md"
+                                                : "hover:bg-slate-100 text-slate-600 hover:shadow-md"
+                                    }`}
+                                >
+                                    <item.icon className="w-5 h-5" />
+                                    <span className="font-medium">{item.label}</span>
+                                </div>
+                            </Link>
                         ))}
                     </nav>
 
                     <div className="absolute bottom-6 left-6 right-6">
-                        <div className="bg-slate-700/50 rounded-lg p-4 mb-4 border border-red-500/10">
-                            <p className="text-sm text-slate-300 mb-2">Need help?</p>
-                            <p className="text-xs text-slate-400 mb-3">Our support team is here to help you</p>
+                        <div className={`rounded-lg p-4 mb-4 border transition-all duration-300 ${
+                            isDarkMode 
+                                ? "bg-slate-700/50 border-red-500/10 text-slate-300" 
+                                : "bg-slate-100 border-slate-200 text-slate-800"
+                        }`}>
+                            <p className="text-sm font-semibold mb-2">Need help?</p>
+                            <p className={`text-xs mb-3 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Our support team is here to help you</p>
                             <Button className="w-full bg-red-500 hover:bg-red-600 text-white text-sm shadow-lg shadow-red-500/25 hover:shadow-red-500/40 transition-all duration-300">
                                 Contact Support
                             </Button>
                         </div>
 
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm text-slate-400">Dark Mode</span>
-                            <div className="w-10 h-6 bg-red-500 rounded-full relative shadow-lg shadow-red-500/30">
-                                <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1 shadow-sm"></div>
-                            </div>
+                            <span className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Dark Mode</span>
+                            <button
+                                onClick={() => setIsDarkMode(!isDarkMode)}
+                                className={`w-10 h-6 rounded-full relative transition-colors duration-300 ${
+                                    isDarkMode ? "bg-red-500 shadow-lg shadow-red-500/40" : "bg-slate-300"
+                                }`}
+                            >
+                                <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all duration-300 shadow-sm ${
+                                    isDarkMode ? "right-1" : "left-1"
+                                }`}></div>
+                            </button>
                         </div>
 
-                        {/* Logout Button */}
+                        {}
                         <Button
                             variant="outline"
-                            className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 transition-all duration-300 bg-transparent"
+                            className={`w-full transition-all duration-300 bg-transparent border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/50 ${
+                                isDarkMode ? "shadow-lg" : "shadow-sm"
+                            }`}
+                            onClick={logout}
                         >
                             <LogOut className="w-4 h-4 mr-2" />
                             Logout
@@ -440,17 +479,23 @@ export default function AdminUsersPage() {
                 </div>
             </div>
 
-            {/* Main Content */}
+            {}
             <div className="ml-64">
-                {/* Top Header */}
-                <div className="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 px-8 py-4">
+                {}
+                <div className={`backdrop-blur-xl border-b px-8 py-4 transition-colors duration-300 ${
+                    isDarkMode ? "bg-slate-800/50 border-slate-700/50" : "bg-white border-slate-200"
+                }`}>
                     <div className="flex items-center justify-between">
                         <div className="flex-1 max-w-md">
                             <div className="relative">
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                                 <Input
                                     placeholder="Search..."
-                                    className="pl-10 bg-slate-700/50 border-slate-600 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/20 transition-all duration-300"
+                                    className={`pl-10 transition-all duration-300 ${
+                                        isDarkMode
+                                            ? "bg-slate-700/50 border-slate-600 text-white focus:border-red-500 focus:shadow-lg focus:shadow-red-500/20"
+                                            : "bg-white border-slate-300 text-slate-800 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/10"
+                                    }`}
                                 />
                             </div>
                         </div>
@@ -468,10 +513,10 @@ export default function AdminUsersPage() {
                                         <span>Admin</span>
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="bg-slate-800 border-slate-700">
-                                    <DropdownMenuItem className="hover:bg-slate-700">Profile</DropdownMenuItem>
-                                    <DropdownMenuItem className="hover:bg-slate-700">Settings</DropdownMenuItem>
-                                    <DropdownMenuItem className="hover:bg-red-500/20 text-red-400">
+                                <DropdownMenuContent className={isDarkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"}>
+                                    <DropdownMenuItem className="hover:bg-slate-700/50 cursor-pointer">Profile</DropdownMenuItem>
+                                    <DropdownMenuItem className="hover:bg-slate-700/50 cursor-pointer">Settings</DropdownMenuItem>
+                                    <DropdownMenuItem className="hover:bg-red-500/20 text-red-500 cursor-pointer" onClick={logout}>
                                         <LogOut className="w-4 h-4 mr-2" />
                                         Logout
                                     </DropdownMenuItem>
@@ -482,17 +527,19 @@ export default function AdminUsersPage() {
                 </div>
 
                 <div className="p-8">
-                    {/* Header */}
+                    {}
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h1 className="text-3xl font-bold text-white mb-2">User Management</h1>
-                            <p className="text-slate-400">Manage system users and their permissions</p>
+                            <h1 className="text-3xl font-bold mb-2">User Management</h1>
+                            <p className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Manage system users and their permissions</p>
                         </div>
 
                         <div className="flex items-center gap-4">
                             <Button
                                 variant="outline"
-                                className="border-slate-600 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/20 transition-all duration-300 bg-transparent text-white"
+                                className={`transition-all duration-300 bg-transparent border-slate-600 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/25 ${
+                                    isDarkMode ? "text-white border-slate-700" : "text-slate-800 border-slate-300"
+                                }`}
                             >
                                 <Download className="w-4 h-4 mr-2" />
                                 Export
@@ -508,65 +555,88 @@ export default function AdminUsersPage() {
                         </div>
                     </div>
 
-                    {/* Stats Cards */}
+                    {}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        {/* Total Users */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-red-500/10">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-red-500/10"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Total Users</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">{users.length}</p>
-                                        {/* You can calculate change% if you have last week's data */}
-                                        <p className="text-sm mt-1 text-green-400">↑ {/* TODO: dynamic value */} from last week</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Total Users</p>
+                                        <p className="text-2xl font-bold mt-1">{users.length}</p>
+                                        <p className="text-sm mt-1 text-green-500">↑ from last week</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-red-500/10">
-                                        <Users className="w-6 h-6 text-red-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-red-500/10" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <Users className="w-6 h-6 text-red-500" />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        {/* Active Users */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-cyan-500/10">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-cyan-500/10"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Active Users</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">{users.filter(u => u.active).length}</p>
-                                        <p className="text-sm mt-1 text-green-400">↑ {/* TODO: dynamic value */} from last week</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Active Users</p>
+                                        <p className="text-2xl font-bold mt-1">{users.filter(u => u.active !== false).length}</p>
+                                        <p className="text-sm mt-1 text-green-500">↑ from last week</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-cyan-500/10">
-                                        <UserCheck className="w-6 h-6 text-cyan-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-cyan-500/10" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <UserCheck className="w-6 h-6 text-cyan-500" />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        {/* Admin Users */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-purple-500/10">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-purple-500/10"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Admin Users</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">{users.filter(u => u.role === 'admin').length}</p>
-                                        <p className="text-sm mt-1 text-green-400">↑ {/* TODO: dynamic value */} new this week</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Admin Users</p>
+                                        <p className="text-2xl font-bold mt-1">{users.filter(u => u.role === 'admin').length}</p>
+                                        <p className="text-sm mt-1 text-green-500">↑ new this week</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-purple-500/10">
-                                        <Shield className="w-6 h-6 text-purple-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-purple-500/10" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <Shield className="w-6 h-6 text-purple-500" />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        {/* Customer Users */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-yellow-500/10">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-yellow-500/10"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Customer Users</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">{users.filter(u => u.role === 'customer').length}</p>
-                                        <p className="text-sm mt-1 text-green-400">↑ {/* TODO: dynamic value */} from last week</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Customer Users</p>
+                                        <p className="text-2xl font-bold mt-1">{users.filter(u => u.role === 'customer').length}</p>
+                                        <p className="text-sm mt-1 text-green-500">↑ from last week</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-yellow-500/10">
-                                        <Package className="w-6 h-6 text-yellow-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-yellow-500/10" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <Package className="w-6 h-6 text-yellow-500" />
                                     </div>
                                 </div>
                             </CardContent>
@@ -574,12 +644,14 @@ export default function AdminUsersPage() {
                     </div>
 
                     <div className="mt-8">
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 overflow-hidden">
-                            <CardHeader className="border-b border-slate-700/50">
+                        <Card className={`backdrop-blur-xl overflow-hidden transition-all duration-300 ${
+                            isDarkMode ? "bg-slate-800/50 border-slate-700/50 text-white" : "bg-white border-slate-200 text-slate-800"
+                        }`}>
+                            <CardHeader className={`border-b ${isDarkMode ? "border-slate-700/50" : "border-slate-200"}`}>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <h3 className="text-lg font-semibold text-white">Users</h3>
-                                        <p className="text-sm text-slate-400">Manage your users and their permissions</p>
+                                        <h3 className="text-lg font-semibold">Users</h3>
+                                        <p className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Manage your users and their permissions</p>
                                     </div>
                                     <Button 
                                         onClick={() => setIsAddModalOpen(true)}
@@ -593,7 +665,7 @@ export default function AdminUsersPage() {
                             <CardContent className="p-0">
                                 <div className="overflow-x-auto">
                                     <table className="w-full">
-                                        <thead className="bg-slate-700/50">
+                                        <thead className={isDarkMode ? "bg-slate-700/50 text-slate-300" : "bg-slate-100 text-slate-600"}>
                                             <tr>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">User</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Email</th>
@@ -682,7 +754,7 @@ export default function AdminUsersPage() {
                 </div>
             </div>
 
-            {/* Delete Confirmation Modal */}
+            {}
             <Dialog open={isDeleteModalOpen} onOpenChange={(open) => {
                 console.log('Delete modal open state changed to:', open);
                 setIsDeleteModalOpen(open);
@@ -732,7 +804,7 @@ export default function AdminUsersPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Edit User Modal */}
+            {}
             <Dialog open={isEditModalOpen} onOpenChange={(open) => {
                 console.log('Edit modal open state changed to:', open);
                 setIsEditModalOpen(open);
@@ -879,7 +951,7 @@ export default function AdminUsersPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Add User Modal */}
+            {}
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
                 <DialogContent className="bg-slate-800/95 backdrop-blur-xl border-slate-700/50 max-w-2xl shadow-2xl shadow-red-500/10">
                     <DialogHeader className="border-b border-slate-700/50 pb-4">

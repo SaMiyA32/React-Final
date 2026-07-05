@@ -1,4 +1,4 @@
-// Using simple interface with direct exports
+
 interface IProduct {
   _id: string;
   name: string;
@@ -13,11 +13,11 @@ interface IProduct {
 
 type IProductFormData = Omit<IProduct, '_id' | 'createdAt' | 'updatedAt'>;
 
-// Export types
+
 export type Product = IProduct;
 export type ProductFormData = IProductFormData;
 
-// Export values for runtime
+
 export const Product = (props: IProduct): IProduct => ({
   _id: '',
   name: '',

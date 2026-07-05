@@ -94,15 +94,15 @@ export default function AnimatedFooter() {
             ctx.clearRect(0, 0, canvas.width, canvas.height)
 
             iconsRef.current.forEach((iconData) => {
-                // Update position
+                
                 iconData.x += iconData.vx
                 iconData.y += iconData.vy
 
-                // Bounce off edges
+                
                 if (iconData.x < 0 || iconData.x > canvas.width) iconData.vx *= -1
                 if (iconData.y < 0 || iconData.y > canvas.height) iconData.vy *= -1
 
-                // Draw icon background glow
+                
                 const gradient = ctx.createRadialGradient(iconData.x, iconData.y, 0, iconData.x, iconData.y, iconData.size)
                 gradient.addColorStop(0, `rgba(239, 68, 68, ${iconData.opacity})`)
                 gradient.addColorStop(1, "rgba(239, 68, 68, 0)")
@@ -147,10 +147,10 @@ export default function AnimatedFooter() {
 
     return (
         <footer className="relative bg-gradient-to-b from-gray-900 via-black to-gray-900 text-white overflow-hidden">
-            {/* Animated Background */}
+            {}
             <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none opacity-40" style={{ zIndex: 1 }} />
 
-            {/* Animated Grid Background */}
+            {}
             <div className="absolute inset-0 opacity-10" style={{ zIndex: 0 }}>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/20 to-transparent animate-pulse"></div>
                 <div
@@ -167,10 +167,10 @@ export default function AnimatedFooter() {
             </div>
 
             <div className="relative z-10">
-                {/* Main Footer Content */}
+                {}
                 <div className="container mx-auto px-4 py-16">
                     <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-12">
-                        {/* Company Info */}
+                        {}
                         <div className="space-y-6">
                             <div className="space-y-4">
                                 <h3 className="text-3xl font-bold text-red-500 animate-pulse">
@@ -182,7 +182,7 @@ export default function AnimatedFooter() {
                                 </p>
                             </div>
 
-                            {/* Contact Info */}
+                            {}
                             <div className="space-y-3">
                                 <div className="flex items-center space-x-3 group">
                                     <div className="bg-red-600 p-2 rounded-full group-hover:scale-110 transition-transform duration-300">
@@ -211,7 +211,7 @@ export default function AnimatedFooter() {
                             </div>
                         </div>
 
-                        {/* Products */}
+                        {}
                         <div className="space-y-6">
                             <h4 className="text-xl font-bold text-white border-b-2 border-red-500 pb-2 inline-block">Products</h4>
                             <ul className="space-y-3">
@@ -230,7 +230,7 @@ export default function AnimatedFooter() {
                             </ul>
                         </div>
 
-                        {/* Support */}
+                        {}
                         <div className="space-y-6">
                             <h4 className="text-xl font-bold text-white border-b-2 border-red-500 pb-2 inline-block">Support</h4>
                             <ul className="space-y-3">
@@ -249,7 +249,7 @@ export default function AnimatedFooter() {
                             </ul>
                         </div>
 
-                        {/* Newsletter */}
+                        {}
                         <div className="space-y-6">
                             <h4 className="text-xl font-bold text-white border-b-2 border-red-500 pb-2 inline-block">Stay Updated</h4>
                             <p className="text-gray-300">Subscribe to get the latest deals, product launches, and tech news.</p>
@@ -275,7 +275,7 @@ export default function AnimatedFooter() {
                                 {isSubscribed && <p className="text-green-400 text-sm animate-bounce">✓ Successfully subscribed!</p>}
                             </form>
 
-                            {/* Social Media */}
+                            {}
                             <div className="space-y-4">
                                 <h5 className="text-lg font-semibold">Follow Us</h5>
                                 <div className="flex space-x-4">
@@ -296,7 +296,7 @@ export default function AnimatedFooter() {
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
+                {}
                 <div className="border-t border-gray-800 bg-black/50 backdrop-blur-sm">
                     <div className="container mx-auto px-4 py-6">
                         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
@@ -318,7 +318,7 @@ export default function AnimatedFooter() {
                     </div>
                 </div>
 
-                {/* Floating Action Button */}
+                {}
                 <div className="fixed bottom-8 right-8 z-50">
                     <Button
                         className="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-2xl transform hover:scale-110 transition-all duration-300 animate-bounce"

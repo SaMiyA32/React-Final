@@ -8,7 +8,7 @@ export const login = async (req: Request, res: Response) => {
     
     const { email, password } = req.body;
     
-    // Validate input
+    
     if (!email || !password) {
       console.log('[Auth] Missing credentials:', { email: !!email, password: '***' });
       return res.status(400).json({ 
@@ -19,10 +19,10 @@ export const login = async (req: Request, res: Response) => {
     }
 
     try {
-      // authService.authenticateUser now returns { accessToken, refreshToken, user }
+      
       const result = await authService.authenticateUser(email, password);
       
-      // If we reach here, authentication was successful
+      
       console.log('[Auth] Login successful for user:', email);
 
       console.log('[Auth] Login successful for user:', email);
@@ -32,21 +32,21 @@ export const login = async (req: Request, res: Response) => {
         message: "Login successful",
         data: {
           result: result,
-          // accessToken: result.accessToken,
-          // refreshToken: result.refreshToken,
-          // user: result.user
+          
+          
+          
         }
       });
       
     } catch (authError: any) {
       console.error('[Auth] Authentication error:', authError);
       
-      // Default error response
+      
       let errorMessage = 'Authentication failed';
       let statusCode = 401;
       let errorCode = 'AUTH_FAILED';
       
-      // Handle specific error messages
+      
       if (authError.message.includes('password') || authError.message.includes('credentials')) {
         errorMessage = 'Invalid email or password';
         errorCode = 'INVALID_CREDENTIALS';
@@ -63,7 +63,7 @@ export const login = async (req: Request, res: Response) => {
         statusCode = 400;
       }
       
-      // Log the error for debugging
+      
       console.error(`[Auth] Authentication failed: ${errorCode} - ${errorMessage}`);
       
       return res.status(statusCode).json({

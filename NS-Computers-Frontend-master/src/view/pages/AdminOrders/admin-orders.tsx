@@ -1,5 +1,4 @@
-"use client"
-
+import { Link } from "react-router-dom"
 import { useState, useEffect, FormEvent } from "react"
 import { useDispatch } from "react-redux"
 import {
@@ -8,6 +7,7 @@ import {
     updateOrder,
     deleteOrder,
 } from "@/slices/orderSlice"
+import { useAuth } from "@/contexts/AuthContext"
 import { useAppSelector } from "@/store";
 import { selectAllOrdersData } from "@/slices/selectors/orderSelectors";
 import type { AppDispatch, RootState } from "@/store/store"
@@ -39,11 +39,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { format } from "date-fns"
 import { toast } from "sonner"
 
-// Enhanced animated background with intense red effects
+
 const AnimatedBackground = () => {
     return (
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
-            {/* Enhanced floating particles with more red variants */}
+            {}
             {[...Array(35)].map((_, i) => (
                 <div
                     key={i}
@@ -65,7 +65,7 @@ const AnimatedBackground = () => {
                 />
             ))}
 
-            {/* Enhanced gradient orbs with intense red */}
+            {}
             <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-r from-red-500/15 to-pink-500/15 rounded-full blur-3xl animate-pulse" />
             <div
                 className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-to-r from-cyan-500/10 to-red-500/12 rounded-full blur-3xl animate-pulse"
@@ -80,7 +80,7 @@ const AnimatedBackground = () => {
                 style={{ animationDelay: "3s" }}
             />
 
-            {/* Floating red glows with varying sizes */}
+            {}
             {[...Array(10)].map((_, i) => (
                 <div
                     key={`glow-${i}`}
@@ -96,7 +96,7 @@ const AnimatedBackground = () => {
                 />
             ))}
 
-            {/* Pulsing red dots */}
+            {}
             {[...Array(15)].map((_, i) => (
                 <div
                     key={`dot-${i}`}
@@ -113,7 +113,7 @@ const AnimatedBackground = () => {
     )
 }
 
-// Helper function to get status badge styling
+
 const getStatusBadge = (status: Order['status']) => {
     switch (status) {
         case "pending":
@@ -131,7 +131,7 @@ const getStatusBadge = (status: Order['status']) => {
     }
 };
 
-// --- Direct API call to backend for saving order (matching user JSON) ---
+
 const saveOrderToBackend = async (orderData: {
     userId: number;
     username: string;
@@ -155,18 +155,55 @@ const saveOrderToBackend = async (orderData: {
     }
 };
 
-// Example usage: call this function with the required order data
-// saveOrderToBackend({
-//     userId: 2,
-//     username: "charitha",
-//     itemName: "Gaming Laptop",
-//     itemPrice: 1200.00,
-//     status: "pending"
-// });
+
+
+
+
+
+
+
+
 
 export default function AdminOrdersPage() {
     const dispatch = useDispatch<AppDispatch>();
     const { orders, isLoading, error } = useAppSelector(selectAllOrdersData);
+    const { logout } = useAuth();
+
+    
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        return localStorage.getItem('theme') !== 'light';
+    });
+
+    useEffect(() => {
+        if (!isDarkMode) {
+            localStorage.setItem('theme', 'light');
+            document.body.style.backgroundColor = '#f8fafc';
+            document.body.style.color = '#0f172a';
+        } else {
+            localStorage.setItem('theme', 'dark');
+            document.body.style.backgroundColor = 'black';
+            document.body.style.color = 'white';
+        }
+    }, [isDarkMode]);
+
+    const generateReport = () => {
+        if (orders.length === 0) {
+            alert("No orders available to generate report.");
+            return;
+        }
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Order ID,Customer Name,Status,Total Amount,Date\n";
+        orders.forEach(o => {
+            csvContent += `"${o._id || o.orderNumber}","${o.username || 'Guest'}","${o.status}","${o.totalPrice || o.totalAmount || 0}","${o.createdAt ? new Date(o.createdAt).toLocaleDateString() : 'N/A'}"\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `NS_Computers_Orders_Report_${new Date().toLocaleDateString()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -175,7 +212,7 @@ export default function AdminOrdersPage() {
     const [selectedStatus, setSelectedStatus] = useState("all");
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-    // State for the new order form
+    
     const [newOrder, setNewOrder] = useState({
         userId: "",
         username: "",
@@ -197,13 +234,13 @@ export default function AdminOrdersPage() {
         setNewOrder((prev) => ({ ...prev, status: value }));
     };
 
-    // Handle edit order
+    
     const handleEditOrder = (order: Order) => {
         setSelectedOrder(order);
         setIsEditModalOpen(true);
     };
 
-    // Handle delete order
+    
     const handleDeleteOrder = (orderId: string | number) => {
         const orderToDelete = orders.find(order => order._id === orderId);
         if (orderToDelete) {
@@ -212,7 +249,7 @@ export default function AdminOrdersPage() {
         }
     };
 
-    // Confirm delete order
+    
     const confirmDeleteOrder = async () => {
         if (!selectedOrder) return;
         
@@ -231,13 +268,13 @@ export default function AdminOrdersPage() {
     const handleSaveOrder = (e: FormEvent) => {
         e.preventDefault();
 
-        // Basic validation
+        
         if (!newOrder.items.trim()) {
             alert("Please enter order items");
             return;
         }
 
-        // Prepare the order data with the correct item format
+        
         const orderToCreate = {
             orderNumber: `ORD-${Date.now()}`,
             customerName: newOrder.username || `User ${newOrder.userId}`,
@@ -257,7 +294,7 @@ export default function AdminOrdersPage() {
             username: newOrder.username
         };
         
-        // Validate required fields
+        
         if (!orderToCreate.userId || !orderToCreate.username || !newOrder.items.trim()) {
             toast.error("User ID, Username, and Order Items are required");
             return;
@@ -265,13 +302,13 @@ export default function AdminOrdersPage() {
 
         console.log('Creating order with data:', orderToCreate);
 
-        // Dispatch the createOrder thunk
+        
         dispatch(createOrder(orderToCreate))
             .then((result) => {
                 if (createOrder.fulfilled.match(result)) {
                     toast.success("Order created successfully!");
                     setIsAddModalOpen(false);
-                    // Clear form
+                    
                     setNewOrder({
                         userId: "",
                         username: "",
@@ -279,7 +316,7 @@ export default function AdminOrdersPage() {
                         status: "pending",
                         totalPrice: "",
                     });
-                    dispatch(fetchOrders()); // Refetch orders to update the list
+                    dispatch(fetchOrders()); 
                 } else if (createOrder.rejected.match(result)) {
                     const errorMessage = result.payload || 'Failed to create order';
                     console.error('Order creation failed:', result.error);
@@ -304,11 +341,15 @@ export default function AdminOrdersPage() {
     });
 
     return (
-        <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
+            isDarkMode ? "bg-black text-white" : "bg-slate-50 text-slate-900"
+        }`}>
             <AnimatedBackground />
 
-            {/* Sidebar */}
-            <div className="fixed left-0 top-0 h-full w-64 bg-slate-800/90 backdrop-blur-xl border-r border-slate-700/50 z-10">
+            {}
+            <div className={`fixed left-0 top-0 h-full w-64 backdrop-blur-xl border-r transition-all duration-300 z-10 ${
+                isDarkMode ? "bg-slate-800/90 border-slate-700/50 text-white" : "bg-white border-slate-200 text-slate-800"
+            }`}>
                 <div className="p-6">
                     <div className="flex items-center gap-3 mb-8">
                         <div className="w-8 h-8 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg shadow-red-500/30 animate-pulse">
@@ -319,46 +360,63 @@ export default function AdminOrdersPage() {
 
                     <nav className="space-y-2">
                         {[
-                            { icon: TrendingUp, label: "Dashboard", active: false },
-                            { icon: Users, label: "Users", active: false },
-                            { icon: ShoppingCart, label: "Orders", active: true },
-                            { icon: Package, label: "Products", active: false },
-                            { icon: DollarSign, label: "Analytics", active: false },
+                            { icon: TrendingUp, label: "Dashboard", href: "/admin-dashboard", active: false },
+                            { icon: Users, label: "Users", href: "/admin-users", active: false },
+                            { icon: ShoppingCart, label: "Orders", href: "/admin-orders", active: true },
+                            { icon: Package, label: "Products", href: "/admin-products", active: false },
+                            { icon: DollarSign, label: "Analytics", href: "/admin-dashboard", active: false },
                         ].map((item) => (
-                            <div
-                                key={item.label}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
-                                    item.active
-                                        ? "bg-red-500/25 border border-red-500/40 text-red-400 shadow-lg shadow-red-500/15 animate-pulse"
-                                        : "hover:bg-slate-700/50 text-slate-300 hover:shadow-md hover:shadow-red-500/5"
-                                }`}
-                            >
-                                <item.icon className="w-5 h-5" />
-                                <span className="font-medium">{item.label}</span>
-                            </div>
+                            <Link to={item.href} key={item.label} className="block">
+                                <div
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
+                                        item.active
+                                            ? "bg-red-500/25 border border-red-500/40 text-red-400 shadow-lg shadow-red-500/15 animate-pulse"
+                                            : isDarkMode
+                                                ? "hover:bg-slate-700/50 text-slate-300 hover:shadow-md hover:shadow-red-500/5"
+                                                : "hover:bg-slate-100 text-slate-600 hover:shadow-md"
+                                    }`}
+                                >
+                                    <item.icon className="w-5 h-5" />
+                                    <span className="font-medium">{item.label}</span>
+                                </div>
+                            </Link>
                         ))}
                     </nav>
 
                     <div className="absolute bottom-6 left-6 right-6">
-                        <div className="bg-slate-700/50 rounded-lg p-4 mb-4 border border-red-500/15 shadow-lg shadow-red-500/10">
-                            <p className="text-sm text-slate-300 mb-2">Need help?</p>
-                            <p className="text-xs text-slate-400 mb-3">Our support team is here to help you</p>
+                        <div className={`rounded-lg p-4 mb-4 border transition-all duration-300 ${
+                            isDarkMode 
+                                ? "bg-slate-700/50 border-red-500/15 shadow-lg shadow-red-500/10 text-slate-300" 
+                                : "bg-slate-100 border-slate-200 text-slate-800"
+                        }`}>
+                            <p className="text-sm font-semibold mb-2">Need help?</p>
+                            <p className={`text-xs mb-3 ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Our support team is here to help you</p>
                             <Button className="w-full bg-red-500 hover:bg-red-600 text-white text-sm shadow-lg shadow-red-500/30 hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105">
                                 Contact Support
                             </Button>
                         </div>
 
                         <div className="flex items-center justify-between mb-4">
-                            <span className="text-sm text-slate-400">Dark Mode</span>
-                            <div className="w-10 h-6 bg-red-500 rounded-full relative shadow-lg shadow-red-500/40 animate-pulse">
-                                <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1 shadow-sm"></div>
-                            </div>
+                            <span className={`text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>Dark Mode</span>
+                            <button
+                                onClick={() => setIsDarkMode(!isDarkMode)}
+                                className={`w-10 h-6 rounded-full relative transition-colors duration-300 ${
+                                    isDarkMode ? "bg-red-500 shadow-lg shadow-red-500/40" : "bg-slate-300"
+                                }`}
+                            >
+                                <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-all duration-300 shadow-sm ${
+                                    isDarkMode ? "right-1" : "left-1"
+                                }`}></div>
+                            </button>
                         </div>
 
-                        {/* Logout Button */}
+                        {}
                         <Button
                             variant="outline"
-                            className="w-full border-red-500/40 text-red-400 hover:bg-red-500/15 hover:border-red-500/60 transition-all duration-300 bg-transparent shadow-lg shadow-red-500/10 hover:shadow-red-500/20"
+                            className={`w-full transition-all duration-300 bg-transparent border-red-500/40 text-red-400 hover:bg-red-500/15 hover:border-red-500/60 shadow-lg ${
+                                isDarkMode ? "shadow-red-500/10 hover:shadow-red-500/20" : "shadow-sm hover:shadow-md"
+                            }`}
+                            onClick={logout}
                         >
                             <LogOut className="w-4 h-4 mr-2" />
                             Logout
@@ -367,10 +425,12 @@ export default function AdminOrdersPage() {
                 </div>
             </div>
 
-            {/* Main Content */}
+            {}
             <div className="ml-64">
-                {/* Top Header */}
-                <div className="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 px-8 py-4">
+                {}
+                <div className={`backdrop-blur-xl border-b px-8 py-4 transition-colors duration-300 ${
+                    isDarkMode ? "bg-slate-800/50 border-slate-700/50" : "bg-white border-slate-200"
+                }`}>
                     <div className="flex items-center justify-between">
                         <div className="flex-1 max-w-md">
                             <div className="relative">
@@ -379,7 +439,11 @@ export default function AdminOrdersPage() {
                                     placeholder="Search orders..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-10 bg-slate-700/50 border-slate-600 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/25 transition-all duration-300"
+                                    className={`pl-10 transition-all duration-300 ${
+                                        isDarkMode 
+                                            ? "bg-slate-700/50 border-slate-600 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/25" 
+                                            : "bg-white border-slate-300 text-slate-800 focus:border-red-500 focus:shadow-lg focus:shadow-red-500/15"
+                                    }`}
                                 />
                             </div>
                         </div>
@@ -397,10 +461,10 @@ export default function AdminOrdersPage() {
                                         <span>Admin</span>
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent className="bg-slate-800 border-slate-700">
-                                    <DropdownMenuItem className="hover:bg-slate-700">Profile</DropdownMenuItem>
-                                    <DropdownMenuItem className="hover:bg-slate-700">Settings</DropdownMenuItem>
-                                    <DropdownMenuItem className="hover:bg-red-500/20 text-red-400">
+                                <DropdownMenuContent className={isDarkMode ? "bg-slate-800 border-slate-700" : "bg-white border-slate-200"}>
+                                    <DropdownMenuItem className="hover:bg-slate-700/50 cursor-pointer">Profile</DropdownMenuItem>
+                                    <DropdownMenuItem className="hover:bg-slate-700/50 cursor-pointer">Settings</DropdownMenuItem>
+                                    <DropdownMenuItem className="hover:bg-red-500/20 text-red-500 cursor-pointer" onClick={logout}>
                                         <LogOut className="w-4 h-4 mr-2" />
                                         Logout
                                     </DropdownMenuItem>
@@ -411,17 +475,20 @@ export default function AdminOrdersPage() {
                 </div>
 
                 <div className="p-8">
-                    {/* Header */}
+                    {}
                     <div className="flex items-center justify-between mb-8">
                         <div>
-                            <h1 className="text-3xl font-bold text-white mb-2">Order Management</h1>
-                            <p className="text-slate-400">Track and manage customer orders</p>
+                            <h1 className="text-3xl font-bold mb-2">Order Management</h1>
+                            <p className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Track and manage customer orders</p>
                         </div>
 
                         <div className="flex items-center gap-4">
                             <Button
                                 variant="outline"
-                                className="border-slate-600 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/25 transition-all duration-300 bg-transparent text-white"
+                                className={`transition-all duration-300 bg-transparent border-slate-600 hover:border-red-500 hover:shadow-lg hover:shadow-red-500/25 ${
+                                    isDarkMode ? "text-white border-slate-700" : "text-slate-800 border-slate-300"
+                                }`}
+                                onClick={generateReport}
                             >
                                 <Download className="w-4 h-4 mr-2" />
                                 Export
@@ -554,82 +621,110 @@ export default function AdminOrdersPage() {
                         </div>
                     </div>
 
-                    {/* Stats Cards */}
+                    {}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        {/* Total Orders */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-red-500/15 hover:transform hover:scale-105">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-red-500/15"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Total Orders</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">{orders.length}</p>
-                                        <p className="text-sm mt-1 text-green-400">↑ {/* TODO: dynamic value */} from last week</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Total Orders</p>
+                                        <p className="text-2xl font-bold mt-1">{orders.length}</p>
+                                        <p className="text-sm mt-1 text-green-500">↑ from last week</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-red-500/15 animate-pulse">
-                                        <ShoppingCart className="w-6 h-6 text-red-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg animate-pulse ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-red-500/15" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <ShoppingCart className="w-6 h-6 text-red-500" />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        {/* Pending Orders */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-yellow-500/15 hover:transform hover:scale-105">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-yellow-500/15"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Pending Orders</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">{orders.filter(o => o.status === 'pending').length}</p>
-                                        <p className="text-sm mt-1 text-yellow-400">↑ {/* TODO: dynamic value */} new today</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Pending Orders</p>
+                                        <p className="text-2xl font-bold mt-1">{orders.filter(o => o.status === 'pending').length}</p>
+                                        <p className="text-sm mt-1 text-yellow-500">↑ new today</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-yellow-500/15 animate-pulse">
-                                        <Clock className="w-6 h-6 text-yellow-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg animate-pulse ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-yellow-500/15" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <Clock className="w-6 h-6 text-yellow-500" />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        {/* Shipped Orders */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-cyan-500/15 hover:transform hover:scale-105">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-cyan-500/15"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Shipped Orders</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">{orders.filter(o => o.status === 'shipped').length}</p>
-                                        <p className="text-sm mt-1 text-green-400">↑ {/* TODO: dynamic value */} from last week</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Shipped Orders</p>
+                                        <p className="text-2xl font-bold mt-1">{orders.filter(o => o.status === 'shipped').length}</p>
+                                        <p className="text-sm mt-1 text-cyan-500">↑ from last week</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-cyan-500/15 animate-pulse">
-                                        <Truck className="w-6 h-6 text-cyan-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg animate-pulse ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-cyan-500/15" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <Truck className="w-6 h-6 text-cyan-500" />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        {/* Total Revenue */}
-                        <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 hover:border-slate-600/50 transition-all duration-300 hover:shadow-xl shadow-green-500/15 hover:transform hover:scale-105">
+                        {}
+                        <Card className={`backdrop-blur-xl transition-all duration-300 hover:shadow-xl hover:transform hover:scale-105 ${
+                            isDarkMode 
+                                ? "bg-slate-800/50 border-slate-700/50 text-white shadow-green-500/15"
+                                : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                        }`}>
                             <CardContent className="p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-slate-400 text-sm font-medium">Total Revenue</p>
-                                        <p className="text-2xl font-bold mt-1 text-white">LKR {orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0).toLocaleString()}</p>
-                                        <p className="text-sm mt-1 text-green-400">↑ {/* TODO: dynamic value */} from last week</p>
+                                        <p className={`${isDarkMode ? "text-slate-400" : "text-slate-500"} text-sm font-medium`}>Total Revenue</p>
+                                        <p className="text-2xl font-bold mt-1">LKR {orders.reduce((sum, o) => sum + (o.totalPrice || o.totalAmount || 0), 0).toLocaleString()}</p>
+                                        <p className="text-sm mt-1 text-green-500">↑ from last week</p>
                                     </div>
-                                    <div className="w-12 h-12 rounded-lg bg-slate-700/50 flex items-center justify-center shadow-lg shadow-green-500/15 animate-pulse">
-                                        <DollarSign className="w-6 h-6 text-green-400" />
+                                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center shadow-lg animate-pulse ${
+                                        isDarkMode ? "bg-slate-700/50 shadow-green-500/15" : "bg-slate-100 shadow-sm"
+                                    }`}>
+                                        <DollarSign className="w-6 h-6 text-green-500" />
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
 
-                    {/* Orders Section */}
+                    {}
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                        {/* Main Orders Table */}
+                        {}
                         <div className="lg:col-span-3">
-                            <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 shadow-xl shadow-red-500/5">
-                                <CardHeader className="border-b border-slate-700/50">
+                            <Card className={`backdrop-blur-xl transition-all duration-300 shadow-xl ${
+                                isDarkMode 
+                                    ? "bg-slate-800/50 border-slate-700/50 shadow-red-500/5 text-white" 
+                                    : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                            }`}>
+                                <CardHeader className={`border-b ${isDarkMode ? "border-slate-700/50" : "border-slate-200"}`}>
                                     <div className="flex items-center justify-between">
-                                        <CardTitle className="text-white">Recent Orders</CardTitle>
+                                        <CardTitle>Recent Orders</CardTitle>
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            className="text-red-400 hover:text-red-300 hover:bg-red-500/15 transition-all duration-300"
+                                            className={isDarkMode ? "text-red-400 hover:text-red-300 hover:bg-red-500/15" : "text-red-600 hover:text-red-700 hover:bg-red-500/10"}
                                         >
                                             View All
                                         </Button>
@@ -639,14 +734,14 @@ export default function AdminOrdersPage() {
                                     <div className="overflow-x-auto">
                                         <table className="w-full">
                                             <thead>
-                                            <tr className="border-b border-slate-700/50">
-                                                <th className="text-left p-4 font-medium text-slate-400 text-sm">ORDER ID</th>
-                                                <th className="text-left p-4 font-medium text-slate-400 text-sm">CUSTOMER</th>
-                                                <th className="text-left p-4 font-medium text-slate-400 text-sm">ITEMS</th>
-                                                <th className="text-left p-4 font-medium text-slate-400 text-sm">STATUS</th>
-                                                <th className="text-left p-4 font-medium text-slate-400 text-sm">TOTAL</th>
-                                                <th className="text-left p-4 font-medium text-slate-400 text-sm">DATE</th>
-                                                <th className="text-right p-4 font-medium text-slate-400 text-sm">ACTIONS</th>
+                                            <tr className={`border-b ${isDarkMode ? "border-slate-700/50" : "border-slate-200"}`}>
+                                                <th className={`text-left p-4 font-medium text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>ORDER ID</th>
+                                                <th className={`text-left p-4 font-medium text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>CUSTOMER</th>
+                                                <th className={`text-left p-4 font-medium text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>ITEMS</th>
+                                                <th className={`text-left p-4 font-medium text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>STATUS</th>
+                                                <th className={`text-left p-4 font-medium text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>TOTAL</th>
+                                                <th className={`text-left p-4 font-medium text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>DATE</th>
+                                                <th className={`text-right p-4 font-medium text-sm ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>ACTIONS</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -665,7 +760,7 @@ export default function AdminOrdersPage() {
                                                     <td colSpan={7} className="p-12 text-center">
                                                         <div className="flex flex-col items-center gap-4">
                                                             <ShoppingCart className="w-12 h-12 text-slate-600" />
-                                                            <p className="text-slate-400">No orders found</p>
+                                                            <p className={isDarkMode ? "text-slate-400" : "text-slate-500"}>No orders found</p>
                                                             <p className="text-slate-500 text-sm">
                                                                 Orders will appear here once customers start placing them
                                                             </p>
@@ -674,20 +769,18 @@ export default function AdminOrdersPage() {
                                                 </tr>
                                             )}
                                             {filteredOrders.map((order) => (
-                                                <tr key={order._id} className="border-b border-slate-700/50 last:border-0 hover:bg-slate-800/30 transition-colors duration-200">
-                                                    <td className="p-4 text-sm text-slate-300 font-medium">#{String(order._id).substring(0, 8)}</td>
-                                                    <td className="p-4 text-sm text-slate-300">{order.username || 'Guest'}</td>
-                                                    <td className="p-4 text-sm text-slate-400">
-                                                        {typeof order.items === 'string' ? (
-                                                            <span className="block text-xs whitespace-pre-line">
-                                                                {order.items}
+                                                <tr key={order._id} className={`border-b last:border-0 hover:bg-slate-800/30 transition-colors duration-200 ${
+                                                    isDarkMode ? "border-slate-700/50" : "border-slate-200"
+                                                }`}>
+                                                    <td className="p-4 text-sm font-medium">#{String(order._id).substring(0, 8)}</td>
+                                                    <td className="p-4 text-sm">{order.username || 'Guest'}</td>
+                                                    <td className="p-4 text-sm">
+                                                        {order.itemName ? (
+                                                            <span className="block text-xs font-semibold">
+                                                                {order.itemName}
                                                             </span>
                                                         ) : (
-                                                            order.items?.map((item, index) => (
-                                                                <span key={index} className="block text-xs">
-                                                                    {item.name} x {item.quantity}
-                                                                </span>
-                                                            ))
+                                                            <span className="block text-xs italic">Custom Order</span>
                                                         )}
                                                     </td>
                                                     <td className="p-4">
@@ -695,8 +788,8 @@ export default function AdminOrdersPage() {
                                                             {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                                                         </span>
                                                     </td>
-                                                    <td className="p-4 text-sm text-white font-bold">LKR {order.totalPrice.toFixed(2)}</td>
-                                                    <td className="p-4 text-sm text-slate-400">
+                                                    <td className="p-4 text-sm font-bold">LKR {(order.totalPrice || order.totalAmount || 0).toLocaleString()}</td>
+                                                    <td className="p-4 text-sm">
                                                         {order.createdAt ? format(new Date(order.createdAt), "MMM d, yyyy") : 'N/A'}
                                                     </td>
                                                     <td className="p-4 text-right">
@@ -735,26 +828,33 @@ export default function AdminOrdersPage() {
                             </Card>
                         </div>
 
-                        {/* Quick Stats Sidebar */}
+                        {}
                         <div className="space-y-6">
-                            <Card className="bg-slate-800/50 backdrop-blur-xl border-slate-700/50 shadow-xl shadow-red-500/5">
+                            <Card className={`backdrop-blur-xl shadow-xl transition-all duration-300 ${
+                                isDarkMode 
+                                    ? "bg-slate-800/50 border-slate-700/50 shadow-red-500/5 text-white" 
+                                    : "bg-white border-slate-200 text-slate-800 shadow-sm"
+                            }`}>
                                 <CardHeader>
-                                    <CardTitle className="text-white text-lg">Order Analytics</CardTitle>
+                                    <CardTitle className="text-lg">Order Analytics</CardTitle>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-slate-400">Total Orders</span>
-                                        <span className="text-white font-semibold">{orders.length}</span>
+                                        <span className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Total Orders</span>
+                                        <span className="font-semibold">{orders.length}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <span className="text-slate-400">Processing</span>
-                                        <span className="text-yellow-400 font-semibold">{orders.filter(o => o.status === 'processing').length}</span>
+                                        <span className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Processing</span>
+                                        <span className="text-yellow-500 font-semibold">{orders.filter(o => o.status === 'processing').length}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <span className="text-slate-400">Cancelled</span>
-                                        <span className="text-red-400 font-semibold">{orders.filter(o => o.status === 'cancelled').length}</span>
+                                        <span className={isDarkMode ? "text-slate-400" : "text-slate-500"}>Cancelled</span>
+                                        <span className="text-red-500 font-semibold">{orders.filter(o => o.status === 'cancelled').length}</span>
                                     </div>
-                                    <Button className="w-full bg-red-500 hover:bg-red-600 text-white mt-4 shadow-lg shadow-red-500/40 hover:shadow-red-500/60 transition-all duration-300 transform hover:scale-105">
+                                    <Button 
+                                        className="w-full bg-red-500 hover:bg-red-600 text-white mt-4 shadow-lg shadow-red-500/40 hover:shadow-red-500/60 transition-all duration-300 transform hover:scale-105"
+                                        onClick={generateReport}
+                                    >
                                         Generate Report
                                     </Button>
                                 </CardContent>
@@ -764,7 +864,7 @@ export default function AdminOrdersPage() {
                 </div>
             </div>
 
-            {/* Edit Order Modal */}
+            {}
             <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
                 <DialogContent className="bg-slate-800/95 backdrop-blur-xl border-slate-700/50 max-w-3xl shadow-2xl shadow-red-500/15">
                     <DialogHeader className="border-b border-slate-700/50 pb-4">
@@ -905,7 +1005,7 @@ export default function AdminOrdersPage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Delete Confirmation Modal */}
+            {}
             <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
                 <DialogContent className="bg-slate-800/95 backdrop-blur-xl border-slate-700/50 max-w-md shadow-2xl shadow-red-500/15">
                     <DialogHeader>

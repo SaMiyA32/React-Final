@@ -1,21 +1,21 @@
-// src/api.ts
-// Use Vite's import.meta.env for environment variables
+
+
 import axios from "axios";
 
-// FIX: Corrected API_BASE_URL to match the backend's typical port and API prefix
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
-// FIX: Exported as backendApi for consistency with other slices (e.g., productsSlice)
+
 export const backendApi = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // Important for cookies/sessions
+  withCredentials: true, 
 });
 
-// Request interceptor to add auth token
-backendApi.interceptors.request.use( // Changed 'api' to 'backendApi'
+
+backendApi.interceptors.request.use( 
     (config) => {
       const user = JSON.parse(localStorage.getItem('user') || 'null');
       if (user?.token) {
@@ -28,12 +28,12 @@ backendApi.interceptors.request.use( // Changed 'api' to 'backendApi'
     }
 );
 
-// Response interceptor for error handling
-backendApi.interceptors.response.use( // Changed 'api' to 'backendApi'
+
+backendApi.interceptors.response.use( 
     (response) => response,
     (error) => {
       if (error.response?.status === 401) {
-        // Handle unauthorized access
+        
         localStorage.removeItem('user');
         window.location.href = '/login';
       }
@@ -41,7 +41,7 @@ backendApi.interceptors.response.use( // Changed 'api' to 'backendApi'
     }
 );
 
-console.log('API Base URL:', API_BASE_URL); // For debugging
+console.log('API Base URL:', API_BASE_URL); 
 
 export interface User {
   id: string;
@@ -68,10 +68,10 @@ export interface SignupData {
 export const authService = {
   login: async (credentials: LoginCredentials): Promise<User> => {
     try {
-      const response = await backendApi.post('/auth/login', credentials); // Changed 'api' to 'backendApi'
+      const response = await backendApi.post('/auth/login', credentials); 
       const userData = response.data;
 
-      // Store user data and token in localStorage
+      
       localStorage.setItem('user', JSON.stringify(userData));
 
       return userData;
@@ -83,10 +83,10 @@ export const authService = {
 
   signup: async (userData: SignupData): Promise<User> => {
     try {
-      const response = await backendApi.post('/auth/register', userData); // Changed 'api' to 'backendApi'
+      const response = await backendApi.post('/auth/register', userData); 
       const user = response.data;
 
-      // Store user data and token in localStorage
+      
       localStorage.setItem('user', JSON.stringify(user));
 
       return user;
@@ -101,10 +101,10 @@ export const authService = {
   },
 
   logout: () => {
-    // Call the logout endpoint if needed
-    // await backendApi.post('/auth/logout'); // Changed 'api' to 'backendApi'
+    
+    
 
-    // Clear user data from localStorage
+    
     localStorage.removeItem('user');
   },
 
@@ -117,11 +117,11 @@ export const authService = {
     try {
       const user = JSON.parse(userStr);
 
-      // Check if token is expired if you have expiration logic
-      // if (user.expiresAt && new Date(user.expiresAt) < new Date()) {
-      //   localStorage.removeItem('user');
-      //   return null;
-      // }
+      
+      
+      
+      
+      
 
       return user;
     } catch (error) {

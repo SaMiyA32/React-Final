@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store/store';
 
-// Define the Order interface
+
 export interface Order {
     _id: string | number;
     orderNumber: string;
-    customerName: string;
-    customerEmail: string;
+    customerName?: string;
+    customerEmail?: string;
     items: Array<{
         productId: string | number;
         name: string;
@@ -21,9 +21,11 @@ export interface Order {
     paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
     createdAt: string;
     updatedAt: string;
+    userId?: string | number;
+    username?: string;
 }
 
-// Define the state for the order slice
+
 interface OrderState {
     orders: Order[];
     isLoading: boolean;
@@ -38,16 +40,16 @@ const initialState: OrderState = {
     currentOrder: null,
 };
 
-// Thunk to fetch all orders
+
 export const fetchOrders = createAsyncThunk(
     'orders/fetchOrders',
     async (_, { rejectWithValue }) => {
         try {
             console.log('Fetching orders from API...');
-            // Using the correct endpoint for fetching all orders
+            
             const response = await fetch('http://localhost:3000/api/orders/get-all-orders', {
                 method: 'GET',
-                credentials: 'include' // Include cookies for authentication if needed
+                credentials: 'include' 
             });
             if (!response.ok) {
                 const errorData = await response.text();
@@ -56,7 +58,7 @@ export const fetchOrders = createAsyncThunk(
             }
             const data = await response.json();
             console.log('Fetched orders data:', data);
-            return data.data; // Assuming the API response has a 'data' field with the orders array
+            return data.data; 
         } catch (error: any) {
             console.error('Error in fetchOrders:', error);
             return rejectWithValue(error.message || 'An error occurred while fetching orders');
@@ -64,13 +66,13 @@ export const fetchOrders = createAsyncThunk(
     }
 );
 
-// Thunk to create a new order
+
 export const createOrder = createAsyncThunk(
     'orders/createOrder',
     async (orderData: Omit<Order, '_id' | 'createdAt' | 'updatedAt' | 'orderNumber'>, { rejectWithValue }) => {
         try {
-            // Adapt orderData to match backend requirements
-            // If orderData.items exists and is an array, use first item's name as itemName
+            
+            
             let itemName = '';
             let itemPrice = 0;
             if (orderData.items && Array.isArray(orderData.items) && orderData.items.length > 0) {
@@ -90,7 +92,7 @@ export const createOrder = createAsyncThunk(
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include', // Include cookies for authentication if needed
+                credentials: 'include', 
                 body: JSON.stringify(payload),
             });
             
@@ -121,7 +123,7 @@ export const createOrder = createAsyncThunk(
             }
             
             console.log('Order created successfully:', data);
-            return data.data || data; // Handle both {data: ...} and direct response formats
+            return data.data || data; 
         } catch (error: any) {
             console.error('Error in createOrder thunk:', error);
             return rejectWithValue(error.message || 'Error creating order');
@@ -129,13 +131,13 @@ export const createOrder = createAsyncThunk(
     }
 );
 
-// Thunk to update an order
+
 export const updateOrder = createAsyncThunk(
     'orders/updateOrder',
     async ({ id, updatedOrderData }: { id: string | number, updatedOrderData: Partial<Order> }, { rejectWithValue }) => {
         try {
             const stringId = String(id).trim();
-            const response = await fetch(`http://localhost:3000/api/orders/${stringId}`, {
+            const response = await fetch(`http://localhost:3000/api/orders/update-order/${stringId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -153,20 +155,20 @@ export const updateOrder = createAsyncThunk(
     }
 );
 
-// Thunk to delete an order
+
 export const deleteOrder = createAsyncThunk(
     'orders/deleteOrder',
     async (id: string | number, { rejectWithValue }) => {
         try {
             const stringId = String(id).trim();
-            const response = await fetch(`http://localhost:3000/api/orders/${stringId}`, {
+            const response = await fetch(`http://localhost:3000/api/orders/delete-order/${stringId}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to delete order');
             }
-            return id; // Return the ID of the deleted order
+            return id; 
         } catch (error: any) {
             return rejectWithValue(error.message || 'Error deleting order');
         }
@@ -185,7 +187,7 @@ const orderSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        // Fetch Orders
+        
         builder.addCase(fetchOrders.pending, (state) => {
             state.isLoading = true;
             state.error = null;
@@ -199,7 +201,7 @@ const orderSlice = createSlice({
             state.error = action.payload as string;
         });
 
-        // Create Order
+        
         builder.addCase(createOrder.pending, (state) => {
             state.isLoading = true;
             state.error = null;
@@ -213,7 +215,7 @@ const orderSlice = createSlice({
             state.error = action.payload as string;
         });
 
-        // Update Order
+        
         builder.addCase(updateOrder.pending, (state) => {
             state.isLoading = true;
             state.error = null;
@@ -233,7 +235,7 @@ const orderSlice = createSlice({
             state.error = action.payload as string;
         });
 
-        // Delete Order
+        
         builder.addCase(deleteOrder.pending, (state) => {
             state.isLoading = true;
             state.error = null;

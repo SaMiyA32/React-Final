@@ -20,8 +20,9 @@ import { store } from "./store";
 import { loadCart } from "@/features/cart/cartSlice";
 import OrderSummary from './view/pages/OrderSummary/OrderSummary';
 import OrderSuccess from './view/pages/OrderSuccess/OrderSuccess';
+import ProfilePage from './view/pages/Profile/Profile.tsx';
 
-// Protected Route Component
+
 const ProtectedRoute = ({ children, requiredRole = 'user' }: { children: React.ReactNode, requiredRole?: 'user' | 'admin' }) => {
     const { isAuthenticated, user, loading } = useAuth();
 
@@ -40,16 +41,16 @@ const ProtectedRoute = ({ children, requiredRole = 'user' }: { children: React.R
     return <>{children}</>;
 };
 
-// Root route component to redirect to home page by default
+
 const RootRedirect = () => {
     return <Navigate to="/home" replace />;
 };
 
-// CartProvider component to handle cart state
+
 const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useDispatch();
 
-    // Load cart from localStorage when component mounts
+    
     useEffect(() => {
         dispatch(loadCart());
     }, [dispatch]);
@@ -62,14 +63,14 @@ function App() {
         <Provider store={store}>
             <CartProvider>
                 <Routes>
-                    {/* Root route with role-based redirection */}
+                    {}
                     <Route path="/" element={<RootRedirect />} />
 
-                    {/* Public routes */}
+                    {}
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignupPage />} />
 
-                    {/* Routes with DefaultLayout */}
+                    {}
                     <Route path="/" element={
                         <DefaultLayout onCartClick={() => {
                             const cartButton = document.querySelector('.fixed.bottom-8.right-8 button');
@@ -113,9 +114,14 @@ function App() {
                                 <PaymentMethodsPage />
                             </ProtectedRoute>
                         } />
+                        <Route path="/profile" element={
+                            <ProtectedRoute>
+                                <ProfilePage />
+                            </ProtectedRoute>
+                        } />
                     </Route>
 
-                    {/* Order summary and success routes */}
+                    {}
                     <Route path="/order-summary" element={
                         <ProtectedRoute>
                             <OrderSummary />
@@ -127,7 +133,7 @@ function App() {
                         </ProtectedRoute>
                     } />
 
-                    {/* Admin protected routes */}
+                    {}
                     <Route
                         path="/admin-dashboard"
                         element={

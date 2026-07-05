@@ -1,7 +1,7 @@
 import { Document, Schema, Model, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-// Define the user document interface
+
 export interface IUserDocument extends Document {
     _id: number;
     name: string;
@@ -16,17 +16,17 @@ export interface IUserDocument extends Document {
     updatedAt: Date;
 }
 
-// Define the user interface (for input/creation)
+
 export interface IUser extends Omit<IUserDocument, keyof Document> {
     _id?: number;
 }
 
-// Interface for User model
+
 export interface IUserModel extends Model<IUserDocument> {
 
 }
 
-// Create schema
+
 const userSchema = new Schema<IUserDocument, IUserModel>(
     {
         _id: {
@@ -91,25 +91,25 @@ const userSchema = new Schema<IUserDocument, IUserModel>(
 );
 
 
-// Set _id before saving if it's a new document and _id is not provided
+
 userSchema.pre('save', async function (this: IUserDocument, next) {
-    // Only proceed if this is a new document and _id is not already set
+    
     if (this.isNew && !this._id) {
         try {
-            // Find the user with the highest _id
+            
             const UserModel = this.constructor as unknown as Model<IUserDocument>;
             const lastUser = await UserModel.findOne({}, { _id: 1 }, { sort: { _id: -1 } });
 
-            // Set the new _id to be one more than the highest existing _id, or 1 if no users exist
+            
             this._id = lastUser ? lastUser._id + 1 : 1;
 
             console.log(`Setting new user _id to: ${this._id}`);
             next();
         } catch (error) {
             console.error('Error generating user _id:', error);
-            // If there's an error, set a default _id and continue
-            // This ensures we don't block user creation if ID generation fails
-            this._id = Date.now(); // Use timestamp as fallback ID
+            
+            
+            this._id = Date.now(); 
             console.log(`Using fallback _id: ${this._id}`);
             next();
         }
@@ -118,7 +118,7 @@ userSchema.pre('save', async function (this: IUserDocument, next) {
     }
 });
 
-// Hash password before saving if it was modified
+
 userSchema.pre('save', async function (this: IUserDocument, next) {
     if (!this.isModified('password') || !this.password) return next();
 
@@ -132,7 +132,7 @@ userSchema.pre('save', async function (this: IUserDocument, next) {
     }
 });
 
-// Method to compare password
+
 userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
     try {
         if (!candidatePassword) {
@@ -160,11 +160,11 @@ userSchema.methods.comparePassword = async function(candidatePassword: string): 
             hasStoredPassword: !!this.password,
             receivedPassword: !!candidatePassword
         });
-        throw error; // Re-throw to be handled by the auth service
+        throw error; 
     }
 };
 
-// Create and export the User model
+
 const User = model<IUserDocument, IUserModel>('User', userSchema);
 
 export default User;

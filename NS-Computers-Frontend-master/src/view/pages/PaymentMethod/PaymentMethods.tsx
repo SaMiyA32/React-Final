@@ -347,7 +347,7 @@ export default function PaymentMethodsPage() {
 
     return (
         <div className="min-h-screen w-screen bg-black text-white pt-32">
-            {/* Hero Section */}
+            {}
             <section className="relative py-20 overflow-hidden">
                 <ParticleBackground />
 
@@ -387,7 +387,7 @@ export default function PaymentMethodsPage() {
                 </div>
             </section>
 
-            {/* Stats Section */}
+            {}
             <section className="py-16 bg-gray-900/50 backdrop-blur-sm">
                 <div className="container mx-auto px-4">
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -408,7 +408,7 @@ export default function PaymentMethodsPage() {
                 </div>
             </section>
 
-            {/* Payment Categories */}
+            {}
             <section className="py-20 relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/5 to-transparent"></div>
 
@@ -441,7 +441,7 @@ export default function PaymentMethodsPage() {
                 </div>
             </section>
 
-            {/* Payment Methods Grid */}
+            {}
             <section className="py-20 bg-gray-900">
                 <div className="container mx-auto px-4">
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -479,6 +479,7 @@ export default function PaymentMethodsPage() {
                                                         src={method.logo || "/placeholder.svg"}
                                                         alt={method.name}
                                                         className="h-6 w-auto mt-1 opacity-70"
+                                                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                                     />
                                                 )}
                                             </div>
@@ -544,7 +545,7 @@ export default function PaymentMethodsPage() {
                 </div>
             </section>
 
-            {/* Payment Process */}
+            {}
             <section className="py-20 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black"></div>
 
@@ -557,7 +558,7 @@ export default function PaymentMethodsPage() {
                     </div>
 
                     <div className="relative">
-                        {/* Process Line */}
+                        {}
                         <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-red-500 via-red-600 to-red-500 transform -translate-y-1/2"></div>
 
                         <div className="grid lg:grid-cols-4 gap-8">
@@ -584,7 +585,7 @@ export default function PaymentMethodsPage() {
                 </div>
             </section>
 
-            {/* Security Features */}
+            {}
             <section className="py-20 bg-gray-900">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-16">
@@ -616,7 +617,7 @@ export default function PaymentMethodsPage() {
                 </div>
             </section>
 
-            {/* Important Information */}
+            {}
             <section className="py-16 bg-gradient-to-r from-blue-900/20 via-transparent to-purple-900/20">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto">
@@ -660,7 +661,7 @@ export default function PaymentMethodsPage() {
                 </div>
             </section>
 
-            {/* CTA Section */}
+            {}
             <section className="py-20 bg-gradient-to-r from-red-900/20 via-black to-blue-900/20">
                 <div className="container mx-auto px-4 text-center">
                     <div className="max-w-3xl mx-auto space-y-8">

@@ -1,6 +1,6 @@
 import { Document, Schema, model, Model } from 'mongoose';
 
-// Interface for Product document
+
 export interface IProduct extends Document {
     _id: number;
     name: string;
@@ -18,7 +18,7 @@ export interface IProduct extends Document {
     updatedAt: Date;
 }
 
-// Counter schema for auto-incrementing product IDs
+
 interface ICounter extends Document {
     _id: string;
     seq: number;
@@ -31,12 +31,12 @@ const counterSchema = new Schema<ICounter>({
 
 const Counter = model<ICounter>('ProductCounter', counterSchema);
 
-// Interface for Product model
+
 interface IProductModel extends Model<IProduct> {
-    // Static methods can be defined here
+    
 }
 
-// Create the schema
+
 const productSchema = new Schema<IProduct, IProductModel>(
     {
         _id: { type: Number },
@@ -68,36 +68,36 @@ const productSchema = new Schema<IProduct, IProductModel>(
             type: String,
             required: false
         },
-        rating: { // New field for product rating
+        rating: { 
             type: Number,
             min: 0,
             max: 5,
             default: 0
         },
-        specs: { // New field for product specifications
-            type: [String], // Array of strings
+        specs: { 
+            type: [String], 
             default: []
         },
-        currency: { // New field for currency (e.g., "LKR")
+        currency: { 
             type: String,
             default: "LKR"
         },
-        isOnSale: { // New field to indicate if product is on sale
+        isOnSale: { 
             type: Boolean,
             default: false
         },
-        originalPrice: { // New field for original price if on sale
+        originalPrice: { 
             type: Number,
             min: 0,
-            required: function(this: IProduct) { return this.isOnSale === true; } // Required if isOnSale is true
+            required: function(this: IProduct) { return this.isOnSale === true; } 
         }
     },
     {
-        timestamps: true // Adds createdAt and updatedAt fields automatically
+        timestamps: true 
     }
 );
 
-// Auto-increment product ID
+
 productSchema.pre<IProduct>('save', async function(next) {
     if (this.isNew) {
         try {
@@ -116,7 +116,7 @@ productSchema.pre<IProduct>('save', async function(next) {
     }
 });
 
-// Create and export the model
+
 const Product = model<IProduct, IProductModel>('Product', productSchema);
 
 export { Product };

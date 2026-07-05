@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import ParticleBackground from "../home/particle-background.tsx" // FIX: Added .tsx extension to resolve import error
+import ParticleBackground from "../home/particle-background.tsx" 
 
 interface FormData {
     name: string
@@ -37,7 +37,7 @@ interface FormData {
     phone: string
     subject: string
     message: string
-    category: 'Sales' | 'Technical Support' | 'Warranty Claims' | 'Custom Builds' | 'General Inquiry' | ''; // Updated category type
+    category: 'Sales' | 'Technical Support' | 'Warranty Claims' | 'Custom Builds' | 'General Inquiry' | ''; 
 }
 
 interface FormErrors {
@@ -51,22 +51,22 @@ export default function ContactPage() {
         phone: "",
         subject: "",
         message: "",
-        category: "", // Changed default to empty for validation
+        category: "", 
     })
     const [errors, setErrors] = useState<FormErrors>({})
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
-    const [submitError, setSubmitError] = useState<string | null>(null); // State for API submission errors
+    const [submitError, setSubmitError] = useState<string | null>(null); 
     const [focusedField, setFocusedField] = useState<string | null>(null)
     const formRef = useRef<HTMLFormElement>(null)
 
-    // Categories matching backend enum
+    
     const categories = [
         { value: "General Inquiry", label: "General Inquiry", icon: MessageSquare, time: "Anytime" },
         { value: "Sales", label: "Sales Inquiry", icon: Briefcase, time: "9AM - 8PM" },
         { value: "Technical Support", label: "Technical Support", icon: Headphones, time: "24/7" },
         { value: "Warranty Claims", label: "Warranty Claims", icon: Shield, time: "Mon - Fri" },
-        { value: "Custom Builds", label: "Custom Builds", icon: Users, time: "By Appointment" }, // Using Users for Custom Builds, as Zap might not fit
+        { value: "Custom Builds", label: "Custom Builds", icon: Users, time: "By Appointment" }, 
     ];
 
 
@@ -123,7 +123,7 @@ export default function ContactPage() {
             availability: "Mon-Fri",
         },
         {
-            icon: Zap, // Using Zap for Sales Inquiry as it was in your original UI for 'Sales Inquiry'
+            icon: Zap, 
             title: "Sales Inquiry",
             description: "Product information and pricing",
             availability: "9AM-8PM",
@@ -169,20 +169,20 @@ export default function ContactPage() {
             newErrors.name = "Name must be at least 2 characters long";
         }
 
-        // FIX: Updated email regex for more robust client-side validation
+        
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!formData.email.trim()) {
             newErrors.email = "Email is required";
-        } else if (!emailRegex.test(formData.email.trim())) { // Added .trim() here as well
+        } else if (!emailRegex.test(formData.email.trim())) { 
             newErrors.email = "Please enter a valid email address";
         }
 
-        // Phone is optional, but if provided, validate length
+        
         if (formData.phone.trim() && formData.phone.trim().length < 7) {
             newErrors.phone = "Phone number must be at least 7 digits";
         }
 
-        if (!formData.category) { // Check if a category is selected
+        if (!formData.category) { 
             newErrors.category = "Please select a category";
         }
 
@@ -210,13 +210,13 @@ export default function ContactPage() {
         }
 
         setIsSubmitting(true)
-        setSubmitError(null); // Clear any previous API errors
+        setSubmitError(null); 
 
-        // Log the form data before sending
+        
         console.log("Submitting form data:", JSON.stringify(formData));
 
         try {
-            // Updated the URL to match the user's specified backend endpoint
+            
             const response = await fetch("http://localhost:3000/api/contact/save-contact", {
                 method: "POST",
                 headers: {
@@ -229,17 +229,17 @@ export default function ContactPage() {
 
             if (response.ok) {
                 setIsSubmitted(true);
-                setFormData({ // Clear form after successful submission
+                setFormData({ 
                     name: "",
                     email: "",
                     phone: "",
                     subject: "",
                     message: "",
-                    category: "", // Reset category to empty
+                    category: "", 
                 });
-                setTimeout(() => setIsSubmitted(false), 5000); // Hide success message after 5 seconds
+                setTimeout(() => setIsSubmitted(false), 5000); 
             } else {
-                // Handle backend validation errors or other server errors
+                
                 setSubmitError(data.error || data.message || "Failed to send message. Please try again.");
             }
         } catch (error) {
@@ -252,18 +252,18 @@ export default function ContactPage() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value as any })); // Cast to any to handle category type
+        setFormData((prev) => ({ ...prev, [name]: value as any })); 
         if (errors[name]) {
             setErrors((prev) => ({ ...prev, [name]: "" }));
         }
-        if (submitError) { // Clear general submit error on any input change
+        if (submitError) { 
             setSubmitError(null);
         }
     }
 
     return (
         <div className="min-h-screen w-screen bg-black text-white pt-32">
-            {/* Hero Section */}
+            {}
             <section className="relative py-20 overflow-hidden">
                 <ParticleBackground />
 
@@ -288,7 +288,7 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* Contact Cards */}
+            {}
             <section className="py-16 bg-gray-900/50 backdrop-blur-sm">
                 <div className="container mx-auto px-4">
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -326,13 +326,13 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* Main Contact Section */}
+            {}
             <section className="py-20 relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/5 to-transparent"></div>
 
                 <div className="relative z-10 container mx-auto px-4">
                     <div className="grid lg:grid-cols-2 gap-16">
-                        {/* Contact Form */}
+                        {}
                         <div className="space-y-8">
                             <div className="space-y-4">
                                 <h2 className="text-4xl font-bold text-white">
@@ -513,7 +513,7 @@ export default function ContactPage() {
                             </form>
                         </div>
 
-                        {/* Contact Info & Image */}
+                        {}
                         <div className="space-y-8">
                             <div className="relative">
                                 <img
@@ -528,7 +528,7 @@ export default function ContactPage() {
                                 </div>
                             </div>
 
-                            {/* Support Options */}
+                            {}
                             <div className="space-y-4">
                                 <h3 className="text-2xl font-bold text-white">How Can We Help?</h3>
                                 <div className="space-y-3">
@@ -552,7 +552,7 @@ export default function ContactPage() {
                                 </div>
                             </div>
 
-                            {/* Office Hours */}
+                            {}
                             <Card className="bg-gray-800/50 border-gray-700">
                                 <CardContent className="p-6">
                                     <h3 className="text-xl font-bold text-white mb-4 flex items-center">
@@ -580,7 +580,7 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* Map Section */}
+            {}
             <section id="map" className="py-16 bg-gray-900">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
@@ -593,13 +593,14 @@ export default function ContactPage() {
                     <div className="grid lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2">
                             <div className="bg-gray-800 rounded-lg overflow-hidden shadow-2xl h-96 relative">
-                                <img
-                                    src="/placeholder.svg?height=400&width=800&text=Interactive+Map+View"
-                                    alt="Map Location"
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-                                <div className="absolute bottom-4 left-4 text-white">
+                                <iframe
+                                    src="https://maps.google.com/maps?q=123%20Galle%20Road,%20Colombo%2003,%20Sri%20Lanka&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                    title="nS-Computers Location Map"
+                                    className="w-full h-full border-0"
+                                    allowFullScreen
+                                    loading="lazy"
+                                ></iframe>
+                                <div className="absolute bottom-4 left-4 text-white pointer-events-none">
                                     <div className="bg-red-600 px-4 py-2 rounded-full text-sm font-semibold">
                                         📍 nS-Computers Location
                                     </div>
@@ -645,7 +646,7 @@ export default function ContactPage() {
                 </div>
             </section>
 
-            {/* Testimonials */}
+            {}
             <section className="py-16 relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-red-900/10 via-transparent to-blue-900/10"></div>
 

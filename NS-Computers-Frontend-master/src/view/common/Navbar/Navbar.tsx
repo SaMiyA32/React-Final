@@ -8,8 +8,10 @@ import { Link } from "react-router-dom"
 import { CartSidebar } from "@/components/cart/CartSidebar"
 import { useAppSelector } from "@/app/hooks"
 import { selectCartItems } from "@/features/cart/cartSlice"
+import { useAuth } from "@/contexts/AuthContext"
 
 export default function Navbar() {
+    const { user, logout, isAuthenticated } = useAuth()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isCartOpen, setIsCartOpen] = useState(false)
     const [isScrolled, setIsScrolled] = useState(false)
@@ -35,7 +37,7 @@ export default function Navbar() {
 
     return (
         <div className="fixed top-0 left-0 right-0 z-50">
-            {/* Top Banner */}
+            {}
             <div className="bg-gray-900 text-white text-sm py-2 px-4">
                 <div className="container mx-auto flex justify-between items-center">
                     <div className="text-center flex-1">
@@ -44,7 +46,17 @@ export default function Navbar() {
                         {" of VAT."}
                     </div>
                     <div className="hidden md:flex items-center space-x-4 text-xs">
-                        <a href="/login" className="hover:underline">LOGIN / REGISTER</a>
+                        {isAuthenticated ? (
+                            <>
+                                <Link to="/profile" className="text-gray-300 font-medium hover:text-red-550 transition-colors uppercase">
+                                    WELCOME, {user?.name}
+                                </Link>
+                                <span>|</span>
+                                <button onClick={logout} className="hover:underline text-red-500 font-bold cursor-pointer">LOGOUT</button>
+                            </>
+                        ) : (
+                            <a href="/login" className="hover:underline">LOGIN / REGISTER</a>
+                        )}
                         <span>|</span>
                         <span>INSTALMENT PLANS</span>
                         <span>|</span>
@@ -64,7 +76,7 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Main Navbar */}
+            {}
             <nav
                 className={`bg-black/95 backdrop-blur-md transition-all duration-300 ${
                     isScrolled ? "shadow-lg shadow-red-500/20" : ""
@@ -72,7 +84,7 @@ export default function Navbar() {
             >
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between py-4">
-                        {/* Logo */}
+                        {}
                         <div className="flex items-center space-x-4">
                             <div className="text-red-500 font-bold text-2xl">
                                 NS-Computers<sup className="text-xs">®</sup>
@@ -83,7 +95,7 @@ export default function Navbar() {
                             </div>
                         </div>
 
-                        {/* Contact Info */}
+                        {}
                         <div className="hidden lg:flex items-center space-x-6">
                             <div className="text-center">
                                 <div className="text-white text-xs">[ ONLINE STORE ]</div>
@@ -96,7 +108,7 @@ export default function Navbar() {
                             </div>
                         </div>
 
-                        {/* Mobile Menu Button */}
+                        {}
                         <Button
                             variant="ghost"
                             size="sm"
@@ -107,7 +119,7 @@ export default function Navbar() {
                         </Button>
                     </div>
 
-                    {/* Navigation Menu */}
+                    {}
                     <div className={`${isMenuOpen ? "block" : "hidden"} lg:block border-t border-gray-800 lg:border-t-0`}>
                         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between py-4 lg:py-2">
                             <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-y-0 lg:space-x-8">
@@ -119,7 +131,7 @@ export default function Navbar() {
                                             item.active ? "text-red-500" : "text-white"
                                         }`}
                                         onClick={() => {
-                                            // Close mobile menu when a link is clicked
+                                            
                                             if (isMenuOpen) {
                                                 setIsMenuOpen(false);
                                             }
@@ -132,9 +144,27 @@ export default function Navbar() {
                                         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                                     </Link>
                                 ))}
+                                {}
+                                <div className="lg:hidden border-t border-gray-800 pt-4 mt-2 flex flex-col space-y-2">
+                                    {isAuthenticated ? (
+                                        <>
+                                            <span className="text-gray-400 text-sm px-3 font-medium">Logged in as: {user?.name}</span>
+                                            <Link to="/profile" className="text-white px-3 py-2 text-sm hover:text-red-500" onClick={() => setIsMenuOpen(false)}>
+                                                MY PROFILE
+                                            </Link>
+                                            <button onClick={logout} className="text-left text-red-500 font-bold px-3 py-2 text-sm hover:text-red-400 cursor-pointer">
+                                                LOGOUT
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <Link to="/login" className="text-white px-3 py-2 text-sm hover:text-red-500" onClick={() => setIsMenuOpen(false)}>
+                                            LOGIN / REGISTER
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
 
-                            {/* Search Bar */}
+                            {}
                             <div className="flex items-center mt-4 lg:mt-0">
                                 <div className="relative">
                                     <Input
@@ -155,7 +185,7 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* Cart Sidebar */}
+            {}
             <CartSidebar 
                 isOpen={isCartOpen} 
                 onClose={() => setIsCartOpen(false)} 

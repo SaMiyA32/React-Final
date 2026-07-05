@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Debug logs
+  
   console.log('AuthProvider - Current user state:', user);
   console.log('AuthProvider - Loading state:', loading);
 
@@ -47,18 +47,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     checkAuth();
   }, []);
 
-  // Add isAuthenticated and isAdmin getters
+  
   const isAuthenticated = !!user;
   const isAdmin = user?.role === 'admin';
 
   const login = async (credentials: api.LoginCredentials) => {
     try {
       const response = await api.authService.login(credentials);
-      const userData = response.data.result.existingUser; // Extract the user data
+      const userData = response.data.result.existingUser; 
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
 
-      // Redirect based on role
+      
       console.log('AuthProvider - User role:', userData.role);
       if (userData.role === 'admin') {
         console.log('AuthProvider - Admin login detected');
@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser(newUser);
       localStorage.setItem('user', JSON.stringify(newUser));
 
-      // Redirect based on role
+      
       if (newUser.role === 'admin') {
         navigate('/admin-dashboard');
       } else {

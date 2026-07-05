@@ -3,11 +3,11 @@ import type { Product } from '../types/product';
 import { toast } from 'react-toastify';
 
 const productService = {
-  // Get all products
+  
   async getProducts(): Promise<Product[]> {
     try {
       const response = await backendApi.get('/products/get-all-products');
-      // The backend returns { success, count, data } where data contains the products array
+      
       if (response.data && response.data.success && Array.isArray(response.data.data)) {
         return response.data.data;
       } else {
@@ -22,7 +22,7 @@ const productService = {
     }
   },
 
-  // Get single product by ID
+  
   async getProductById(id: string): Promise<Product | null> {
     try {
       const response = await backendApi.get(`/products/${id}`);
@@ -34,7 +34,7 @@ const productService = {
     }
   },
 
-  // Create new product
+  
   async createProduct(productData: ProductFormData): Promise<Product | null> {
     try {
       const response = await backendApi.post('/products', productData);
@@ -47,7 +47,7 @@ const productService = {
     }
   },
 
-  // Update existing product
+  
   async updateProduct(id: string, productData: Partial<IProduct>): Promise<IProduct | null> {
     try {
       const response = await backendApi.patch(`/products/${id}`, productData);
@@ -60,7 +60,7 @@ const productService = {
     }
   },
 
-  // Delete product
+  
   async deleteProduct(id: string): Promise<boolean> {
     try {
       await backendApi.delete(`/products/${id}`);
@@ -73,7 +73,7 @@ const productService = {
     }
   },
 
-  // Upload product image
+  
   async uploadProductImage(file: File): Promise<{ url: string } | null> {
     try {
       const formData = new FormData();
