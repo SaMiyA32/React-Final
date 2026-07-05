@@ -3,6 +3,7 @@ import { Product } from '../models/product.model';
 import User from '../models/user.model';
 import { Types } from 'mongoose';
 import { Counter } from '../models/counter.model';
+import { emailService } from './email.service';
 
 class OrderService {
     
@@ -110,6 +111,13 @@ class OrderService {
                 totalPrice
             });
             const createdOrder = await order.save();
+            
+            User.findOne({ _id: userId }).then(async (userDoc) => {
+                if (userDoc && userDoc.email) {
+                    await emailService.sendOrderReceiptEmail(userDoc.email, userDoc.name, createdOrder);
+                }
+            }).catch(err => console.error('Error sending order confirmation email:', err));
+
             return this.createOrderResponse(createdOrder, null, 201);
         } catch (error) {
             console.error('Error creating order with stock check:', error);

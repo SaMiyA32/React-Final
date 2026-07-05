@@ -112,6 +112,106 @@ class EmailService {
       return false;
     }
   }
+
+  async sendOrderReceiptEmail(email: string, name: string, order: any): Promise<boolean> {
+    try {
+      const mailOptions = {
+        from: env.SMTP_FROM,
+        to: email,
+        subject: `🛒 Order Confirmation - Order #${order._id}`,
+        html: `
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+            <div style="background: linear-gradient(135deg, #ff4d4d, #ff1a1a); padding: 25px 15px; text-align: center; width: 100%; box-sizing: border-box;">
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600; line-height: 1.3;">
+                <span style="font-size: 28px; display: block; margin-bottom: 5px;">🛒</span>
+                NS-<span style="color: #ffeb3b;">Computers</span>
+              </h1>
+              <p style="color: rgba(255, 255, 255, 0.9); margin: 8px 0 0; font-size: 14px; line-height: 1.4;">Order Placed Successfully</p>
+            </div>
+            
+            <div style="padding: 25px 20px; background: #ffffff; box-sizing: border-box; width: 100%;">
+              <h2 style="color: #333333; margin: 0 0 15px 0; font-size: 20px; line-height: 1.4;">Thank you for your order, ${name}!</h2>
+              <p style="color: #555555; font-size: 15px; line-height: 1.6; margin: 0 0 20px 0;">
+                We have received your order and are currently processing it. Here are your order details:
+              </p>
+              
+              <div style="background: #f8f9ff; border: 1px solid #eef0fd; border-radius: 8px; padding: 20px; margin-bottom: 25px; box-sizing: border-box; width: 100%;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #333;">
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Order ID:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #ff1a1a;">#${order._id}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Order Date:</strong></td>
+                    <td style="padding: 6px 0; text-align: right;">${new Date(order.createdAt).toLocaleString()}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 0; color: #666;"><strong>Payment Status:</strong></td>
+                    <td style="padding: 6px 0; text-align: right; font-weight: bold; color: #ef4444; text-transform: uppercase;">Pending</td>
+                  </tr>
+                </table>
+              </div>
+
+              <h3 style="color: #333; font-size: 16px; margin: 0 0 10px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px;">Order Details</h3>
+              <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #333; margin-bottom: 25px;">
+                <thead>
+                  <tr style="border-bottom: 1px solid #eee; color: #777;">
+                    <th style="text-align: left; padding: 8px 0; font-weight: 600;">Item Description</th>
+                    <th style="text-align: right; padding: 8px 0; font-weight: 600;">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid #fcfcfc;">
+                    <td style="padding: 12px 0;">
+                      <div style="font-weight: bold; color: #111;">${order.itemName}</div>
+                    </td>
+                    <td style="padding: 12px 0; text-align: right; font-weight: bold; color: #ff1a1a;">
+                      LKR ${order.totalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="background: #fff8f8; border-left: 4px solid #ff4d4d; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 25px; box-sizing: border-box; width: 100%;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+                  <tr>
+                    <td style="color: #555;"><strong>Subtotal:</strong></td>
+                    <td style="text-align: right; color: #333;">LKR ${order.totalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #555; padding-top: 5px;"><strong>Shipping:</strong></td>
+                    <td style="text-align: right; color: #333; padding-top: 5px;">Free</td>
+                  </tr>
+                  <tr style="border-top: 1px dashed #ffcccc;">
+                    <td style="color: #111; font-weight: bold; padding-top: 10px; font-size: 17px;">Total:</td>
+                    <td style="text-align: right; color: #ff1a1a; font-weight: bold; padding-top: 10px; font-size: 19px;">
+                      LKR ${order.totalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <p style="color: #777777; font-size: 13px; line-height: 1.6; margin: 0;">
+                If you have any questions or concerns regarding this order, please contact our support team at 
+                <a href="mailto:support@nscomputers.com" style="color: #ff1a1a; text-decoration: none;">support@nscomputers.com</a>.
+              </p>
+            </div>
+            
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 12px; color: #777777; border-top: 1px solid #eeeeee; box-sizing: border-box; width: 100%;">
+              <p style="margin: 0 0 5px 0;">© ${new Date().getFullYear()} NS-Computers. All rights reserved.</p>
+              <p style="margin: 0;">Thank you for shopping with us!</p>
+            </div>
+          </div>
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      console.error('Error sending order receipt email:', error);
+      return false;
+    }
+  }
 }
 
 export const emailService = new EmailService();
